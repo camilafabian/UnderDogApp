@@ -35,7 +35,7 @@ nav a.sec.activa{color:#fff;background:rgba(15,127,115,.38)}
 nav a.sec b{font-weight:600;opacity:.6;margin-right:4px}
 
 /* portada */
-header{background:radial-gradient(1200px 500px at 85% -10%,#1d4a52 0%,transparent 60%),linear-gradient(180deg,var(--noche),var(--noche2));color:#e9eef1;padding:34px 0 56px}
+header{background:radial-gradient(1200px 500px at 85% -10%,#1d4a52 0%,transparent 60%),linear-gradient(180deg,var(--noche),var(--noche2));color:#e9eef1;padding:28px 0 32px}
 .kicker{text-transform:uppercase;letter-spacing:.14em;font-size:.74rem;font-weight:600;color:#7fd3c6}
 h1{font-family:var(--serif);font-size:clamp(2.1rem,4.6vw,3.1rem);line-height:1.08;margin:.3em 0 .4em;letter-spacing:-.01em;color:#fff}
 .tesis{font-family:var(--serif);font-weight:600;font-size:clamp(1.05rem,2vw,1.25rem);line-height:1.45;color:#dbe4e8;max-width:800px;margin:0 0 42px}
@@ -52,9 +52,13 @@ h1{font-family:var(--serif);font-size:clamp(2.1rem,4.6vw,3.1rem);line-height:1.0
 .dos-preguntas i{font-style:normal;flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#7fd3c6;color:var(--noche);font-family:var(--serif);font-weight:700;font-size:1.4rem}
 .dos-preguntas span{font-family:var(--serif);font-size:clamp(1.1rem,2vw,1.3rem);line-height:1.3;color:#fff}
 .dos-preguntas b{color:#9fe6da}
-.ficha-proyecto{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-@media (max-width:760px){.ficha-proyecto{grid-template-columns:1fr 1fr}}
-@media (max-width:480px){.ficha-proyecto{grid-template-columns:1fr}}
+.ficha-proyecto{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media (max-width:900px){.ficha-proyecto{grid-template-columns:1fr 1fr}}
+.ficha-proyecto .def-fav,.ficha-proyecto .def-und{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28)}
+.ficha-proyecto .def-und b{color:#8fb8ea}
+/* la portada ocupa justo una pantalla (menos la barra de arriba), con el contenido centrado */
+header{min-height:calc(100vh - 56px);display:flex;align-items:center}
+header>.env{width:100%}
 .ficha-proyecto div{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 16px;font-size:.88rem;line-height:1.45;color:#a9b7bf}
 .ficha-proyecto small{display:block;text-transform:uppercase;letter-spacing:.1em;font-size:.68rem;font-weight:600;color:#7fd3c6;margin-bottom:4px}
 .ficha-proyecto b{display:block;font-family:var(--serif);font-size:1.15rem;color:#fff;margin-bottom:3px}
@@ -175,10 +179,21 @@ code{font-size:.84em;background:#f0eee8;padding:1px 6px;border-radius:5px}
 .nombres label{font-size:.75rem;font-weight:600;color:var(--suave);text-transform:uppercase;letter-spacing:.05em}
 .nombres input{width:100%;font:inherit;font-size:.95rem;padding:8px 10px;border:1px solid #d3d8dd;border-radius:10px;margin-top:4px}
 .nombres input:focus{border-color:var(--modelo);outline:none}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}
-.chip{font:inherit;font-size:.85rem;border:1px solid #d3d8dd;background:#fff;color:var(--tinta);border-radius:99px;padding:7px 14px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:8px}
-.chip:hover{border-color:var(--modelo)}.chip.activo{background:var(--modelo);border-color:var(--modelo);color:#fff}
-.chip em{font-style:normal;font-size:.72rem;opacity:.7}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0 18px}
+@media(max-width:680px){.chips{grid-template-columns:1fr}}
+.chip{font:inherit;text-align:left;border:1.5px solid #d3d8dd;background:#fff;color:var(--tinta);border-radius:14px;padding:12px 14px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:2px}
+.chip:hover{border-color:var(--modelo);transform:translateY(-1px)}
+.chip.activo{border-color:var(--modelo);background:var(--modelo-claro);box-shadow:0 0 0 2px var(--modelo) inset}
+.chip em{font-style:normal;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--modelo)}
+.chip b{font-size:.95rem;line-height:1.25}
+.chip small{font-size:.78rem;color:var(--suave)}
+.juntos{display:flex;gap:8px;align-items:flex-start;font-size:.8rem;line-height:1.4;color:var(--suave);background:var(--modelo-claro);border-radius:10px;padding:8px 10px;margin:8px 0 4px;cursor:pointer}
+.juntos input{margin-top:3px;accent-color:var(--modelo)}
+#g_explorar .vega-embed{display:flex;flex-direction:column;align-items:stretch}
+.vega-bindings:empty{display:none}
+#g_explorar .vega-embed>.vega-bindings{order:-1;display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;margin:0 0 16px;padding:12px 14px;background:var(--modelo-claro);border-radius:12px;border:1px solid #cfe6e1}
+#g_explorar .vega-embed>.vega-bindings::before{content:"Filtrar por";align-self:center;font-size:.74rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--modelo);margin-right:2px}
+#g_explorar .vega-embed>svg,#g_explorar .vega-embed>canvas{align-self:center;max-width:100%}
 .panel{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 @media (max-width:760px){.panel{grid-template-columns:1fr}}
 .caja{background:var(--papel);border:1px solid var(--linea);border-radius:18px;padding:18px 20px;box-shadow:var(--sombra)}
@@ -193,10 +208,35 @@ code{font-size:.84em;background:#f0eee8;padding:1px 6px;border-radius:5px}
 .deslizador input{grid-column:1/-1;width:100%;accent-color:var(--modelo)}
 .deslizador.fuera output{color:var(--aviso)}
 .aviso{background:var(--avisobg);color:var(--aviso);border-radius:12px;padding:10px 14px;margin:12px 0;font-size:.9rem;display:none}
-.veredicto{border-radius:18px;padding:20px 22px;margin:18px 0;background:var(--noche);color:#e9eef1}
-.veredicto .grande{font-family:var(--serif);font-size:1.6rem;line-height:1.25;margin:4px 0 8px;color:#fff}
+.veredicto{border-radius:18px;margin:18px 0;background:var(--noche);color:#e9eef1;overflow:hidden;border:2px solid transparent}
+.veredicto.v-si{border-color:#2fb5a3}.veredicto.v-no{border-color:#e0a03a}
+.veredicto .cab{padding:16px 22px 4px}
+.veredicto .decision{display:grid;grid-template-columns:1fr auto;gap:12px 24px;align-items:center;padding:8px 22px 18px}
+@media(max-width:680px){.veredicto .decision{grid-template-columns:1fr}}
+.veredicto .etq{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#8fa1ab;font-weight:600}
+.veredicto .grande{font-family:var(--serif);font-size:2.3rem;line-height:1.1;margin:2px 0 6px;color:#fff}
 .veredicto .si{color:#7fe0d0}.veredicto .no{color:#ffc46b}
-.veredicto .chico{color:#a9b7bf;font-size:.9rem}
+.veredicto .porque{color:#c6d2d8;font-size:.95rem;line-height:1.45}
+.veredicto .plata{background:rgba(255,255,255,.06);border-radius:14px;padding:12px 18px;text-align:center;min-width:190px}
+.veredicto .plata .num{font-family:var(--serif);font-size:2.2rem;line-height:1.1;font-weight:700}
+.veredicto .plata .sub{font-size:.78rem;color:#a9b7bf;line-height:1.3}
+.veredicto .barras{background:rgba(255,255,255,.04);padding:14px 22px;display:grid;gap:9px}
+.veredicto .barra{display:grid;grid-template-columns:130px 1fr 52px;gap:10px;align-items:center;font-size:.85rem}
+@media(max-width:680px){.veredicto .barra{grid-template-columns:100px 1fr 46px;font-size:.8rem}}
+.veredicto .pista{height:14px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden}
+.veredicto .pista i{display:block;height:100%;border-radius:99px}
+.veredicto .barra b{text-align:right;font-size:1rem;color:#fff}
+.veredicto .pie{padding:12px 22px 16px;font-size:.85rem;color:#a9b7bf;line-height:1.5}
+.veredicto .real{display:inline-block;background:rgba(255,255,255,.1);color:#fff;border-radius:99px;padding:3px 12px;font-size:.82rem;margin-bottom:6px;font-weight:600}
+.veredicto .pie .ojo{color:#ffcf8a;display:block;margin-top:6px}
+/* aparición al scrollear (sólo si hay JS y la persona no pidió menos movimiento) */
+@media (prefers-reduced-motion:no-preference){
+ html.anim .rev{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+ html.anim .rev.in{opacity:1;transform:none}
+ html.anim .grafico.rev{transform:none;opacity:1}
+ html.anim .grafico.rev > div{clip-path:inset(0 100% 0 0);transition:clip-path 1.3s cubic-bezier(.4,.1,.2,1) .15s}
+ html.anim .grafico.rev.in > div{clip-path:inset(0 -2% 0 0)}
+}
 footer{background:var(--noche);color:#9aa8b0;padding:40px 0 60px;font-size:.88rem;margin-top:60px}
 footer b{color:#fff}
 @media (max-width:600px){body{font-size:15.5px}header{padding:56px 0 46px}section{padding:56px 0 26px}.grafico{padding:14px 10px 8px}}
@@ -221,15 +261,13 @@ footer b{color:#fff}
   <div><i>1</i><span>¿Se puede <b>predecir</b> quién gana?</span></div>
   <div><i>2</i><span>¿Se le puede <b>ganar a la casa</b> de apuestas?</span></div>
  </div>
- <div class="glosario">
-  <div><b>Favorito</b>El equipo al que las casas de apuestas le dan más chances de ganar el partido.</div>
-  <div><b class="und">Underdog</b>El otro: el no favorito. El que, según las apuestas, debería perder.</div> </div>
  <div class="ficha-proyecto">
-  <div><small>Los datos</small><b>{{N}} partidos</b>De 9 ligas europeas, entre 2008 y 2016 (European Soccer Database).</div>
+  <div class="def-fav"><small>Definición</small><b>Favorito</b>El equipo al que las casas de apuestas le dan más chances de ganar.</div>
+  <div class="def-und"><small>Definición</small><b>Underdog</b>El otro: el no favorito. Según las apuestas, debería perder.</div>
+  <div><small>Los datos</small><b>{{N}} partidos</b>De 9 ligas europeas, entre 2008 y 2016.</div>
   <div><small>Qué predecimos</small><b>¿Gana el underdog?</b>Sí o no. Si empata o pierde, cuenta como no.</div>
-  <div><small>Con qué</small><b>Cuotas y titulares</b>Las cuotas antes del partido y el rating FIFA de los 11 titulares de cada equipo.</div>
+  <div><small>Con qué</small><b>Cuotas y titulares</b>Las cuotas y el rating FIFA de los 11 titulares de cada equipo.</div>
  </div>
-
 </div></header>
 
 <!-- TALLO 0 · EL PROBLEMA -->
@@ -295,7 +333,7 @@ footer b{color:#fff}
 <!-- TALLO 2 · LO QUE ENCONTRAMOS -->
 <section id="hallazgo"><div class="env">
  <div class="etiqueta"><i>2</i>Lo que encontramos <span class="etapa e1">Etapa 1 · predecir</span></div>
- <h2>Un once mejor que el del favorito más que duplica las victorias del underdog ({{XI_BAJO}} → {{XI_ALTO}}), pero la cuota ya lo sabía</h2>
+ <h2>Cuando los titulares del underdog son mejores que los del favorito, gana {{XI_ALTO}} de las veces; cuando son mucho peores, {{XI_BAJO}}. Pero la cuota ya lo sabía</h2>
  <div class="texto"><p class="lead">Comparamos el rating FIFA medio de los once titulares del underdog contra el del favorito. Cuanto mejor es el once del underdog,
  más gana. Pero la línea naranja (lo que la cuota esperaba en esos mismos partidos) va pegada a la azul: las casas de apuestas ya
  ponían en el precio la calidad de los titulares. Eso anticipa lo que va a pasar con el modelo: los jugadores casi no agregan información a la cuota.</p></div>
@@ -495,7 +533,7 @@ footer b{color:#fff}
   <label>Equipo<select class="lindo" id="b_equipo" disabled><option value="">Primero elegí la liga</option></select></label>
   <label>Partido<select class="lindo" id="b_partido" disabled><option value="">Primero elegí el equipo</option></select></label>
  </div>
- <p class="nota-chips">O probá un ejemplo:</p>
+ <p class="nota-chips">Empezá con un partido real de la temporada de test (o armá el tuyo abajo):</p>
  <div class="chips" id="chips"></div>
  <div class="panel">
   <div class="caja">
@@ -513,6 +551,7 @@ footer b{color:#fff}
   </div>
   <div class="caja">
    <h3>Los once titulares</h3><p class="nota">Rating FIFA: underdog menos favorito. A la izquierda, el favorito tiene mejores jugadores.</p>
+   <label class="juntos"><input type="checkbox" id="juntos" checked> Mover juntos el rating medio, los 3 mejores y el mejor jugador: al tocar uno, los ratings de nivel se acomodan como en partidos reales. Defensa, medio y ataque se mueven por separado, y el rating medio del XI siempre acompaña a esas tres líneas.</label>
    <div id="gaps"></div>
   </div>
  </div>
@@ -641,8 +680,12 @@ for (const [c, v] of Object.entries(M.numericas)) {
     <input id="${c}" type="range" step="any" min="${r.min}" max="${r.max}" value="${v.media}"></div>`);
 }
 const chips = document.getElementById("chips");
-CASOS.forEach((c, i) => chips.insertAdjacentHTML("beforeend",
-  `<button class="chip" data-i="${i}">${c.etiqueta ? `<em>${c.etiqueta}</em>` : ""}${c.local} – ${c.visitante}</button>`));
+// sólo tres ejemplos, uno por cada historia que se quiere contar
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const EJEMPLOS = [0, 2, 3].filter(i => CASOS[i]);
+EJEMPLOS.forEach(i => { const c = CASOS[i];
+  chips.insertAdjacentHTML("beforeend",
+  `<button class="chip" data-i="${i}"><em>${cap(c.etiqueta || "Ejemplo")}</em><b>${c.local} – ${c.visitante}</b><small>${c.liga} · ${c.fecha}</small></button>`); });
 chips.addEventListener("click", e => { const b = e.target.closest(".chip"); if (b) cargarCaso(+b.dataset.i); });
 let casoActual = null;
 function cargarCaso(i) {
@@ -655,6 +698,7 @@ function cargar(c) {
   document.getElementById("n_visit").value = c.visitante;
   ["c_local", "c_empate", "c_visit"].forEach((id, k) => document.getElementById(id).value = c.cuotas[k].toFixed(2));
   for (const k of Object.keys(M.numericas)) document.getElementById(k).value = c.gaps[k] == null ? M.numericas[k].mediana : c.gaps[k];
+  fotografiar();
   calcular();
 }
 
@@ -682,8 +726,43 @@ bPartido.addEventListener("change", () => {
   cargar(TEST[+bPartido.value]);
 });
 
+// ratings que se mueven juntos: correlaciones medidas en los 2.399 partidos de test; al mover uno, los otros se acomodan al valor esperado (rho × desvíos)
+const RHO = {
+  nofav_xi_overall_mean_gap: {nofav_top3_overall_gap: .92, nofav_best_overall_gap: .86, nofav_def_overall_gap: .88, nofav_mid_overall_gap: .81, nofav_att_overall_gap: .84},
+  nofav_top3_overall_gap: {nofav_best_overall_gap: .96, nofav_xi_overall_mean_gap: .92, nofav_def_overall_gap: .77, nofav_mid_overall_gap: .74, nofav_att_overall_gap: .80},
+  nofav_best_overall_gap: {nofav_top3_overall_gap: .96, nofav_xi_overall_mean_gap: .86, nofav_def_overall_gap: .73, nofav_mid_overall_gap: .68, nofav_att_overall_gap: .74},
+  nofav_def_overall_gap: {nofav_xi_overall_mean_gap: .88, nofav_top3_overall_gap: .77, nofav_mid_overall_gap: .61, nofav_att_overall_gap: .63},
+  nofav_mid_overall_gap: {nofav_xi_overall_mean_gap: .81, nofav_top3_overall_gap: .74, nofav_def_overall_gap: .61, nofav_att_overall_gap: .58},
+  nofav_att_overall_gap: {nofav_xi_overall_mean_gap: .84, nofav_top3_overall_gap: .80, nofav_def_overall_gap: .63, nofav_mid_overall_gap: .58}
+};
+// el rating medio del XI es el promedio de los once: se recalcula a partir de defensa, medio y ataque
+// (regresión en los 2.399 partidos de test: xi ≈ 0,42·defensa + 0,26·medio + 0,31·ataque, R² = 0,97)
+const PESO_LINEA = {nofav_def_overall_gap: .42, nofav_mid_overall_gap: .26, nofav_att_overall_gap: .31};
+const XI = "nofav_xi_overall_mean_gap";
+const clamp = (c, v) => Math.min(Math.max(v, M.rangos[c].min), M.rangos[c].max);
+const valorDe = c => parseFloat(document.getElementById(c).value);
+let previo = {};
+function fotografiar() { for (const c of Object.keys(M.numericas)) previo[c] = valorDe(c); }
+fotografiar();
+contenedor.addEventListener("input", e => {
+  const id = e.target.id;
+  if (!M.numericas[id]) return;
+  if (PESO_LINEA[id]) {
+    // las líneas se mueven por su cuenta; el promedio del XI acompaña según el peso de cada línea
+    document.getElementById(XI).value = clamp(XI, previo[XI] + PESO_LINEA[id] * (valorDe(id) - previo[id]));
+  } else if (RHO[id] && document.getElementById("juntos").checked) {
+    // el rating medio, los 3 mejores y el mejor jugador arrastran a los demás ratings de nivel según su correlación
+    const z = (valorDe(id) - M.numericas[id].media) / M.numericas[id].desvio;
+    for (const [otro, r] of Object.entries(RHO[id])) {
+      const m = M.numericas[otro];
+      if (m) document.getElementById(otro).value = clamp(otro, m.media + r * z * m.desvio);
+    }
+  }
+  fotografiar(); calcular();
+});
+
 // si el usuario toca algo a mano, deja de ser el partido real: se borra el resultado y queda lo que escribió
-document.querySelectorAll("#proba input:not([type=text])").forEach(el => el.addEventListener("input", () => {
+document.querySelectorAll("#proba input:not([type=text]):not([type=checkbox])").forEach(el => el.addEventListener("input", () => {
   casoActual = null; document.querySelectorAll(".chip").forEach(b => b.classList.remove("activo")); calcular();
 }));
 document.querySelectorAll("#n_local, #n_visit").forEach(el => el.addEventListener("input", () => calcular()));
@@ -697,6 +776,7 @@ function calcular() {
   const [pLocal, pEmpate, pVisit] = inv.map(x => x / suma);
   const localFavorito = pLocal > pVisit;
   const pUnderdog = Math.min(pLocal, pVisit), cuotaUnderdog = localFavorito ? cuotas[2] : cuotas[0];
+  if (suma < 0.999) avisos.push(`Con estas cuotas las probabilidades suman ${pct(suma, 0)}, menos de 100%: un mercado así es imposible (las casas siempre se quedan con un margen y la suma da algo más de 100%). Revisá las cuotas.`);
   if (Math.abs(pLocal - pVisit) <= 0.05) avisos.push("Partido parejo: entre local y visitante hay 5 puntos o menos. El modelo nunca vio partidos así (el underdog depende de la casa de apuestas).");
   if (inv[1] > 0.40) avisos.push("La cuota del empate es incoherente (probabilidad implícita mayor a 40%): el pipeline descarta esos partidos.");
   for (const c of ["prob_no_favorito", "prob_draw"]) {
@@ -709,6 +789,10 @@ function calcular() {
     gaps[c] = v;
     document.getElementById("o_" + c).textContent = (v > 0 ? "+" : "") + coma(v, 1);
   }
+  // los ratings de nivel (XI, 3 mejores, defensa, medio, ataque) correlacionan entre 0,86 y 0,96: en la realidad se mueven juntos
+  const grupo = ["nofav_xi_overall_mean_gap", "nofav_top3_overall_gap", "nofav_def_overall_gap", "nofav_mid_overall_gap", "nofav_att_overall_gap"].filter(c => M.numericas[c]);
+  const zs = grupo.map(c => (gaps[c] - M.numericas[c].media) / M.numericas[c].desvio);
+  if (zs.length && Math.max(...zs) - Math.min(...zs) > 3.5) avisos.push("Los ratings del once no son coherentes entre sí (por ejemplo, un gran contraste entre el rating medio, la defensa o el ataque). En partidos reales esos valores se mueven juntos, así que esta combinación casi no ocurre (menos de 1 de cada 100 partidos reales).");
   aviso.style.display = avisos.length ? "block" : "none";
   aviso.innerHTML = avisos.length ? "<b>Ojo:</b> " + avisos.join("<br>") : "";
 
@@ -720,17 +804,40 @@ function calcular() {
   const nombreLocal = document.getElementById("n_local").value.trim() || "Local";
   const nombreVisit = document.getElementById("n_visit").value.trim() || "Visitante";
   const fav = localFavorito ? nombreLocal : nombreVisit, und = localFavorito ? nombreVisit : nombreLocal;
+  const si = valor > 0, por100 = valor * 100, m = Math.max(pUnderdog, p, 0.01) * 1.25;
+  const ancho = x => Math.min(100, 100 * x / m).toFixed(1) + "%";
+  const color = si ? "#2fb5a3" : "#e0a03a";
+  veredicto.className = "veredicto " + (si ? "v-si" : "v-no");
   veredicto.innerHTML = `
-    <div class="duelo" style="margin-top:0">
-      <div class="equipo">${escudo(fav, 34)}<div><small style="color:#8fa1ab">Favorito</small>${fav}</div></div>
+    <div class="cab"><div class="duelo" style="margin:0">
+      <div class="equipo">${escudo(fav, 30)}<div><small style="color:#8fa1ab">Favorito</small>${fav}</div></div>
       <span class="vs" style="color:#8fa1ab">contra</span>
-      <div class="equipo">${escudo(und, 34)}<div><small style="color:#8fa1ab">Underdog · cuota ${coma(cuotaUnderdog, 2)}</small>${und}</div></div></div>
-    <div class="grande">${valor > 0
-      ? `<span class="si">Apostaría.</span> La cuota paga más de lo que vale el riesgo.`
-      : `<span class="no">No apostaría.</span> La cuota no compensa el riesgo.`}</div>
-    <div>La cuota le da al underdog <b>${pct(pUnderdog)}</b>; el modelo, <b>${pct(p)}</b>. Valor esperado: <b>${valor > 0 ? "+" : ""}${pct(valor)}</b> por cada peso apostado.</div>
-    <div class="chico" style="margin-top:8px">${casoActual ? casoActual.resultado + ". " : ""}Valor esperado positivo no es ganar: es cobrar, en el largo plazo, más de lo que el riesgo vale.
-    ${avisos.length ? " Hay valores fuera de lo que vio el modelo: tomalo con pinzas." : ""}</div>`;
+      <div class="equipo">${escudo(und, 30)}<div><small style="color:#8fa1ab">Underdog · paga ${coma(cuotaUnderdog, 2)} por peso</small>${und}</div></div></div></div>
+    <div class="decision">
+      <div><div class="etq">Qué haría el modelo</div>
+        <div class="grande">${si ? `<span class="si">Apostaría al underdog</span>` : `<span class="no">No apostaría</span>`}</div>
+        <div class="porque">${si
+          ? `El modelo cree que ${und} tiene más chances de las que paga la cuota: el precio es bueno.`
+          : `El modelo no ve en ${und} más chances de las que ya paga la cuota: el precio no compensa el riesgo.`}</div></div>
+      <div class="plata"><div class="etq">Por cada $100 apostados</div>
+        <div class="num" style="color:${si ? "#7fe0d0" : "#ffc46b"}">${por100 >= 0 ? "+" : "−"}$${coma(Math.abs(por100), 0)}</div>
+        <div class="sub">ganancia promedio esperada si se repitiera muchas veces</div></div></div>
+    <div class="barras">
+      <div class="barra"><span>Chances según la cuota</span><div class="pista"><i style="width:${ancho(pUnderdog)};background:#e08a1e"></i></div><b>${pct(pUnderdog)}</b></div>
+      <div class="barra"><span>Chances según el modelo</span><div class="pista"><i style="width:${ancho(p)};background:${color}"></i></div><b>${pct(p)}</b></div>
+    </div>
+    <div class="pie">${casoActual ? (() => { const g = casoActual.resultado.match(/(\d+)\D+(\d+)/), gl = g ? +g[1] : 0, gv = g ? +g[2] : 0, gano = localFavorito ? gv > gl : gl > gv;
+        return `<span class="real">${casoActual.resultado}: ${gano ? "ganó el underdog" : gl === gv ? "empate, no ganó el underdog" : "no ganó el underdog"}</span><br>`; })() : ""}
+      Un valor positivo no es ganar este partido: es cobrar, a la larga, más de lo que el riesgo vale. Con estos datos el retorno de esta regla todavía no se distingue del azar: sirve para pensar, no es una promesa de ganancia.
+      ${avisos.length ? `<span class="ojo">⚠ Hay valores fuera de lo que vio el modelo: tomalo con pinzas.</span>` : ""}</div>`;
+}
+
+// --- aparición al scrollear: texto que sube, gráficos que se "dibujan" de izquierda a derecha
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
+  document.documentElement.classList.add("anim");
+  const objetivos = document.querySelectorAll("section .etiqueta, section h2, section .texto, section .grafico, section .como-leer, section details, section .panel, section .veredicto, section .chips, .tesis");
+  const rev = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); rev.unobserve(e.target); } }), {threshold: .12, rootMargin: "0px 0px -6% 0px"});
+  objetivos.forEach(el => { el.classList.add("rev"); rev.observe(el); });
 }
 
 // --- navegación: barra de progreso y sección activa
