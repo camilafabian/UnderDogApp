@@ -552,31 +552,30 @@ def grafico_con_y_sin_regla(filas: list[dict]) -> alt.Chart:
 
 
 def grafico_test(test: pd.DataFrame, reglas: dict, banda: pd.DataFrame) -> alt.Chart:
-    """Ganancia acumulada en el test, en pesos, con la misma plata en juego para todas las estrategias: cada una reparte en sus
-    apuestas lo mismo que apostó el modelo en total ($100 por cada apuesta del modelo). Así no gana la que más veces apuesta."""
+    """Ganancia acumulada en el test: cada estrategia apuesta $100 cada vez que decide apostar. Como unas apuestan más veces que
+    otras, cada línea dice cuántas veces apostó y cuánto deja por cada $100, para no confundir más plata con mejor estrategia."""
     e = test.sort_values("fecha")
     est = estrategias(e, reglas)
     claves = ["modelo", "sin_regla", "todos", "rango", "once", "nunca"]
     g = ganancia_si_apuesta(e)
-    n_modelo = int(est["modelo"][0].sum())
-    en_juego = APUESTA * n_modelo
-    # lo que gana cada estrategia apostando $100 por partido, escalado para que su total apostado sea el del modelo
-    escala_k = {k: (n_modelo / est[k][0].sum() if est[k][0].sum() else 0.0) for k in claves}
-    diario = (pd.DataFrame({est[k][1]: np.where(est[k][0], g, 0.0) * escala_k[k] for k in claves})
+    cuantas = {k: int(est[k][0].sum()) for k in claves}
+    # el nombre de cada línea lleva cuántas veces apostó
+    nombre = {k: f"{est[k][1]} · {entero(cuantas[k])}" if k != "nunca" else est[k][1] for k in claves}
+    diario = (pd.DataFrame({nombre[k]: np.where(est[k][0], g, 0.0) for k in claves})
                 .groupby(e["fecha"].values).sum().cumsum())
     inicio = pd.DataFrame(0.0, index=[(pd.Timestamp(diario.index[0]) - pd.Timedelta(days=1)).strftime("%Y-%m-%d")], columns=diario.columns)
     diario = pd.concat([inicio, diario])
     largo = diario.rename_axis("fecha").reset_index().melt(id_vars="fecha", var_name="estrategia", value_name="ganancia")
-    nombres = [est[k][1] for k in claves]
+    nombres = [nombre[k] for k in claves]
     colores = [COLOR[k] if k in COLOR else c for k, c in zip(claves, [None, None, None, COLOR["mercado"], COLOR["jugadores"], None])]
     trazos = [[1, 0], [6, 4], [1, 0], [6, 4], [2, 3], [1, 0]]
     gruesos = alt.condition(f"datum.estrategia == '{nombres[0]}'", alt.value(4), alt.value(2.2))
     x = alt.X("fecha:T", title=None, axis=alt.Axis(format="%b %Y", tickCount=6, grid=False))
-    y = alt.Y("ganancia:Q", title=f"Ganancia acumulada ($), apostando {pesos(en_juego)[1:]} en total cada una",
+    y = alt.Y("ganancia:Q", title="Ganancia acumulada ($), apostando $100 en cada apuesta",
               axis=alt.Axis(tickCount=6, format=",.0f",
                             labelExpr="(datum.value > 0 ? '+$' : datum.value < 0 ? '−$' : '$') + replace(datum.label, '−', '')"))
     # leyenda arriba (con el mismo trazo que cada línea) y, al final de cada línea, cuánto terminó: así entra también en el celular
-    leyenda = alt.Legend(title=None, orient="top", columns=2, labelFontSize=12, labelLimit=150, symbolStrokeWidth=3, symbolSize=420,
+    leyenda = alt.Legend(title=None, orient="top", columns=2, labelFontSize=12, labelLimit=320, symbolStrokeWidth=3, symbolSize=420,
                          symbolType="stroke")
     color = alt.Color("estrategia:N", scale=alt.Scale(domain=nombres, range=colores), legend=leyenda)
     banda = banda.assign(fecha=lambda d: pd.to_datetime(d["fecha"]).dt.strftime("%Y-%m-%d"))
@@ -598,11 +597,14 @@ def grafico_test(test: pd.DataFrame, reglas: dict, banda: pd.DataFrame) -> alt.C
     ys = []
     for v, _ in pos:
         ys.append(min(v, ys[-1] - sep) if ys else v)
-    rot = pd.DataFrame([{"fecha": ultimo, "ganancia": yy, "estrategia": nm, "t": pesos(v)} for (v, nm), yy in zip(pos, ys)])
+    por_cien = {nombre[k]: (fin[nombre[k]] / (APUESTA * cuantas[k]) if cuantas[k] else 0.0) for k in claves}
+    rot = pd.DataFrame([{"fecha": ultimo, "ganancia": yy, "estrategia": nm,
+                         "t": pesos(v)}
+                        for (v, nm), yy in zip(pos, ys)])
     rotulos = alt.Chart(rot).mark_text(align="left", dx=8, fontSize=12, fontWeight="bold").encode(x=x, y=y, text="t:N", color=color)
     piso = min(diario.min().min(), banda["bajo"].min())
     azar = pd.DataFrame({"fecha": [banda["fecha"].iloc[len(banda) // 2]], "ganancia": [piso - sep * 0.8],
-                         "t": ["gris: 90% de los sorteos al azar"]})
+                         "t": ["gris: azar, con tantas apuestas como el modelo"]})
     rot_azar = alt.Chart(azar).mark_text(align="center", fontSize=11, fontStyle="italic", color=COLOR["tinta_suave"]).encode(x=x, y=y, text="t:N")
     return (area + lineas + rotulos + rot_azar).properties(width="container", height=400)
 
@@ -838,6 +840,10 @@ def armar_pagina(silver: dict, explorar: pd.DataFrame, test_casos: list[dict]) -
                                                   "validación: retorno": f"{signo(np.median(fin_val))} (mediana)",
                                                   "test: apuestas": entero(f["modelo"]["test_n"]),
                                                   "test: retorno": f"{signo(np.median(fin_test))} (mediana)"}], destacar=0)
+    # qué tan buena fue cada temporada para los underdogs: la de test, ¿fue excepcional?
+    por_temp = e.assign(g=ganancia_si_apuesta(e)).groupby("temporada").agg(gana=("gano", "mean"), todos=("g", "mean"))
+    otras = por_temp.drop(index=TEST_TEMPORADA)
+    test_mejor = por_temp["gana"].idxmax() == TEST_TEMPORADA
     # la tabla corta de la sección 4: retorno por cada $100 en los dos períodos, y si gana en los dos
     t_resumen = tabla_html([{"Estrategia": r["nombre"], "Validación 2010–2015": signo(r["val_r"]), "Test 2015/16": signo(r["test_r"]),
                              "¿Gana en los dos?": "Sí" if r["val_r"] > 0 and r["test_r"] > 0 else "No"}
@@ -881,7 +887,13 @@ def armar_pagina(silver: dict, explorar: pd.DataFrame, test_casos: list[dict]) -
         "M50_DICE": entero(m50["aciertos"] + m50["falsas_alarmas"]), "M50_ACC": pct((m50["bien_descartados"] + m50["aciertos"]) / len(test), 0),
         "UMBRAL_MATRIZ": pct(UMBRAL_MATRIZ, 0),
         # 4 · ¿sirve para apostar?
-        "T_ESTRATEGIAS_TEST": t_estr_test, "T_RESUMEN_ESTRATEGIAS": t_resumen, "T_ESTRATEGIAS_TODO": t_estr_todo, "T_UMBRALES": t_umbrales,
+        "T_ESTRATEGIAS_TEST": t_estr_test, "T_RESUMEN_ESTRATEGIAS": t_resumen,
+        "TEMPORADA_TEST_ES": "la mejor temporada para los underdogs de todo el período" if test_mejor else "una temporada buena para los underdogs",
+        "OTRAS_GANA": f"entre {pct(otras['gana'].min())} y {pct(otras['gana'].max())}",
+        "OTRAS_TODOS": f"entre {signo(otras['todos'].min() / 100)} y {signo(otras['todos'].max() / 100)}",
+        "N_SIN_TEST": entero(f["sin_regla"]["test_n"]),
+        "PLATA_MODELO": pesos(f["modelo"]["test_r"] * APUESTA * f["modelo"]["test_n"]),
+        "PLATA_SIN": pesos(f["sin_regla"]["test_r"] * APUESTA * f["sin_regla"]["test_n"]), "T_ESTRATEGIAS_TODO": t_estr_todo, "T_UMBRALES": t_umbrales,
         "UMBRAL_SIN": pct(reglas["umbral"], 0), "RANGO": nombre_rango(a, b),
         "SIN_VAL": signo(f["sin_regla"]["val_r"]), "SIN_TEST": signo(f["sin_regla"]["test_r"]),
         "SIN_N_VAL": entero(f["sin_regla"]["val_n"]), "SIN_N_TEST": entero(f["sin_regla"]["test_n"]),

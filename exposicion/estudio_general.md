@@ -163,11 +163,16 @@ temporada buena para los underdogs (ganaron 22,1%).
 | Nunca | 0% | 0% |
 | Al azar, la misma cantidad de veces (mediana de 300 sorteos) | −7,9% | −0,7% |
 
-**La plata en el test.** Todas las estrategias ponen en juego la misma plata que el modelo ($40.400: $100 en cada una de sus 404
-apuestas) y la reparten entre sus apuestas. Si cada una apostara $100 por partido, ganaría la que más veces apuesta: «sin la regla»
-(1.720 apuestas) parecía arrasar con +$11.616, aunque por cada $100 deja casi lo mismo que el modelo (+6,8% contra +6,6%). Con la misma
-plata en juego, al final de la temporada: modelo +$2.672, «sin la regla» +$2.728, «once mejor» +$3.499, apostar a todos −$379,
-rango de cuota −$2.158.
+**La plata en el test.** Cada estrategia apuesta $100 cada vez que decide apostar. Al final de la temporada: modelo +$2.672 (404 apuestas),
+«sin la regla» +$11.616 (1.720), «once mejor» +$3.993 (461), apostar a todos −$2.250 (2.399), rango de cuota −$3.627 (679).
+
+**¿Por qué otras ganan más plata en el test?** Porque 2015/16 fue la mejor temporada para los underdogs del período: ganaron el 22,1%
+(en las otras temporadas, entre 17,8% y 21,1%) y apostar a ciegas perdió sólo 0,9% (en las otras, entre 2,2% y 23,7%). En un año así gana
+más plata la que más apuesta. «Sin la regla» apuesta cuatro veces más que el modelo, pero por cada $100 deja casi lo mismo (+6,8% contra +6,6%).
+
+**¿Eso hace peor al modelo?** No: en los años de validación, «sin la regla» pierde 5,8% y «once mejor» 4,9%; el modelo es el único que gana
+en los dos períodos. Sumando los dos períodos (2010–2016, fuera de muestra), el modelo gana +$3.733 en 1.800 apuestas y es el único positivo;
+«sin la regla» pierde −$40.755. Ojo: los años de validación se usaron para elegir el modelo y las reglas, por eso el profe pidió mostrar sólo el test.
 
 **La lectura honesta.**
 
@@ -246,7 +251,8 @@ la rehace sólo con lo que está en `docs/data/`, sin el Silver. GitHub Pages pu
 - **¿Por qué ese rango de cuota y ese umbral?** Se eligieron sólo con la validación, entre opciones fijadas antes, igual que el modelo.
 - **Si «once mejor» da más en el test, ¿por qué no lo usan?** Porque perdía en validación: elegirlo mirando el test sería hacer trampa.
 - **¿Por qué el test anda mejor que la validación?** 2015/16 fue una temporada buena para los underdogs (22,1% de victorias).
-- **¿Por qué en el gráfico todas apuestan la misma plata?** Porque si cada una apostara $100 por partido, ganaría la que más veces apuesta, aunque deje menos por apuesta.
+- **¿Por qué «sin la regla» gana más plata que el modelo en el test?** Porque apuesta cuatro veces más en la mejor temporada para los underdogs. Por cada $100 deja lo mismo, y en validación pierde 5,8%.
+- **¿Por qué no mostrar las seis temporadas en el gráfico?** Porque los años de validación se usaron para elegir el modelo y las reglas: el resultado ahí es optimista. El único período limpio es el test.
 - **¿Qué es la banda gris?** Lo que da apostar al azar la misma cantidad de veces que el modelo (90% central de 300 sorteos).
 - **¿Por qué mostrar sólo el test?** Es lo único que el modelo final nunca vio. La validación está en los «Cómo lo sabemos».
 

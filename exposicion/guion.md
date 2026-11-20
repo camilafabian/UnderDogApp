@@ -159,18 +159,21 @@ modelo sin la regla, apostar a todos, apostar cuando la cuota le da entre 10% y 
 
 > **En pantalla:** el gráfico de la plata.
 
-Este gráfico muestra la ganancia acumulada en la temporada de test. Para que sea justo, todas ponen en juego la misma plata que el modelo,
-$40.400, y la reparten entre sus apuestas: si no, ganaría la que más veces apuesta. El modelo con la regla, la línea verde gruesa, termina
-en más $2.672. Apostar a todos, en menos $379, y el rango de cuota, en menos $2.158. La banda gris es lo que da apostar al azar: una línea
-adentro de la banda no se distingue de la suerte.
+Este gráfico muestra la ganancia acumulada en la temporada de test, apostando $100 cada vez que cada estrategia decide apostar. El modelo
+con la regla, la línea verde gruesa, termina en más $2.672. Apostar a todos, en menos $2.250, y el rango de cuota, en menos $3.627. La banda
+gris es lo que da apostar al azar tantas veces como el modelo: una línea adentro de la banda no se distingue de la suerte.
 
-> **En pantalla:** la tabla y los tres puntos de lectura.
+> **En pantalla:** el recuadro «¿Por qué otras estrategias ganan más en el test?».
 
-La tabla muestra cada estrategia en los dos períodos. Tres lecturas. Primero, la regla es lo que evita perder: el mismo modelo sin la regla
-pierde 5,8% en validación, casi como apostar a ciegas. Segundo, en el test hay estrategias que dan algo más, como «once mejor», pero perdían
-en validación: fue una temporada buena para los underdogs. Tercero, todavía podría ser suerte: el 5% de los sorteos al azar supera el 15,1%.
+Hay estrategias que ganan más plata que el modelo, y la razón está acá: 2015/16 fue la mejor temporada para los underdogs de todo el
+período. Ganaron el 22,1% de los partidos, y apostar a ciegas casi no perdió. En un año así, gana más plata la que más apuesta: el modelo
+sin la regla apostó 1.720 veces y terminó en más $11.616; el nuestro, 404 veces.
 
-Lo que sí se sostiene es que el modelo con la regla es la única estrategia que gana en los dos períodos.
+> **En pantalla:** la tabla y los dos puntos de lectura.
+
+Pero miren la tabla. En los años que usamos para elegir las estrategias, «sin la regla» perdía 5,8% y «once mejor», 4,9%. El modelo con la
+regla es el único que gana en los dos períodos: es la diferencia de apostar sólo cuando el precio es bueno. Y una aclaración honesta: en el
+test, el modelo todavía queda adentro de la banda del azar, así que su ganancia todavía podría ser suerte.
 
 > **En pantalla:** el recuadro oscuro «Etapa 2, en una línea».
 
@@ -208,7 +211,7 @@ o cuotas de cierre, que son más difíciles de superar. Muchas gracias.
 | ¿Hay fuga de información? | Los goles y resultados sólo se usan para construir el objetivo y quedan fuera del dataset de modelado; el pipeline falla si aparecen. | 2 |
 | ¿Por qué el test anda mejor que la validación? | Fue una temporada buena para los underdogs: ganaron el 22,1%, contra 20% de la tasa base. | 4 |
 | ¿Por qué 5 puntos para definir al underdog? | Por debajo, Pinnacle y Bet365 eligen distinto favorito en el 54% de los partidos casi parejos. | 1 |
-| ¿Por qué todas apuestan la misma plata en el gráfico? | Porque apuestan distinta cantidad de veces: si cada una apostara $100 por partido, ganaría más la que más apuesta, aunque deje menos por apuesta. | 5 |
+| ¿Por qué «sin la regla» gana más plata que el modelo en el test? | Porque apuesta cuatro veces más en la mejor temporada para los underdogs; por cada $100 deja lo mismo (+6,8% contra +6,6%) y en validación pierde 5,8%. | 5 |
 | ¿Entonces el modelo gana plata? | No está demostrado: es la única estrategia que no pierde en ningún período, pero el +6,6% no se distingue del azar. | 5 |
 
 ## Ensayo

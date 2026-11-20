@@ -437,13 +437,16 @@ footer b{color:#fff}
  el mismo modelo <b>sin la regla</b> (apostar si le da al underdog más de {{UMBRAL_SIN}}), apostar a todos, apostar cuando la cuota le da {{RANGO}},
  apostar cuando el once del underdog es mejor, no apostar nunca, y apostar al azar.</p></div>
  <div class="grafico"><div id="g_test"></div></div>
- <p class="como-leer">Ganancia acumulada a lo largo de 2015/16. Todas ponen en juego la misma plata que el modelo ($100 en cada una de sus {{APUESTAS_TEST}} apuestas) y la reparten
- entre sus apuestas: así no gana la que más veces apuesta. La banda gris es lo que da apostar al azar: adentro de la banda, no se distingue de la suerte.</p>
+ <p class="como-leer">Ganancia acumulada a lo largo de 2015/16, apostando $100 cada vez que la estrategia decide apostar (en la leyenda, cuántas veces apostó cada una).
+ La banda gris es lo que da apostar al azar tantas veces como el modelo: adentro de la banda, no se distingue de la suerte.</p>
+ <div class="ejemplo"><b>¿Por qué otras estrategias ganan más en el test?</b> Porque 2015/16 fue {{TEMPORADA_TEST_ES}}: ganaron el {{TASA_TEST}} de los partidos
+ (en las otras temporadas, {{OTRAS_GANA}}) y apostar a ciegas casi no perdió ({{ROI_TODOS_TEST}}; en las otras, {{OTRAS_TODOS}}). En un año así, gana más plata la que
+ más apuesta: el modelo sin la regla apostó {{N_SIN_TEST}} veces y terminó en {{PLATA_SIN}}; el modelo, {{APUESTAS_TEST}} veces y {{PLATA_MODELO}}.</div>
  <div class="tbl tabla-grande">{{T_RESUMEN_ESTRATEGIAS}}</div>
  <ul class="lectura">
-  <li><b>La regla es lo que evita perder:</b> el mismo modelo sin la regla pierde {{SIN_VAL}} en validación, casi como apostar a ciegas ({{ROI_TODOS}}).</li>
-  <li><b>En el test hay quien gana más</b> («once mejor», el modelo sin la regla), pero perdían en validación: fue una temporada buena para los underdogs.</li>
-  <li><b>Todavía podría ser suerte:</b> el 5% de los sorteos al azar supera {{AZAR_P95_TEST}}.</li>
+  <li><b>El modelo gana en los dos períodos; las que le ganan este año, no:</b> en los años que usamos para elegirlas (validación), «sin la regla» perdía {{SIN_VAL}} y
+   «once mejor», {{ONCE_VAL}}. Es la diferencia de apostar sólo cuando el precio es bueno.</li>
+  <li><b>Todavía podría ser suerte:</b> el modelo queda adentro de la banda gris; el 5% de los sorteos al azar supera el {{AZAR_P95_TEST}}.</li>
  </ul>
  <div class="conclusion"><small>Etapa 2, en una línea</small><b>No le ganamos a las casas de apuestas, pero dejamos de perder contra ellas.</b> Apostar a ciegas pierde el margen
  de la casa; el modelo con la regla apuesta sólo en algunos partidos ({{APUESTAS_TEST}} de {{N_TEST}} en el test) y no pierde en ningún período, aunque con estos datos su ganancia todavía podría ser suerte.</div>
