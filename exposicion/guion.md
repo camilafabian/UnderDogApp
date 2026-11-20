@@ -162,11 +162,12 @@ Por eso la diferencia se mide en la validación: cinco temporadas contra una.
 Comparamos el modelo con reglas simples. Cada una eligió sus parámetros mirando sólo la validación, igual que el modelo: apostar a todos,
 apostar cuando la cuota le da al underdog entre 10% y 20%, apostar cuando su once es mejor, no apostar nunca y apostar al azar.
 
-> **En pantalla:** el gráfico de ganancia acumulada.
+> **En pantalla:** el gráfico de retorno acumulado.
 
-Este gráfico muestra sólo la temporada de test, empezando en cero. El modelo con la regla, la línea verde gruesa, termina en más $2.672.
-Apostar a todos termina en menos $2.250, y el rango de cuota, en menos $3.627. La banda gris es lo que da apostar al azar la misma cantidad
-de veces: una línea adentro de la banda no se distingue de la suerte.
+Este gráfico muestra sólo la temporada de test. Mide cuánto deja cada $100 apostados, y no la plata total, porque las estrategias apuestan
+distinta cantidad de veces. El modelo con la regla, la línea verde gruesa, termina en más 6,6%. Apostar a todos termina en menos 0,9%,
+y el rango de cuota, en menos 5,3%. La banda gris es lo que da apostar al azar la misma cantidad de veces que el modelo: una línea adentro
+de la banda no se distingue de la suerte.
 
 > **En pantalla:** la tabla y los tres puntos de lectura.
 
@@ -220,6 +221,7 @@ o cuotas de cierre, que son más difíciles de superar. Muchas gracias.
 | ¿Hay fuga de información? | Los goles y resultados sólo se usan para construir el objetivo y quedan fuera del dataset de modelado; el pipeline falla si aparecen. | 2 |
 | ¿Por qué el test anda mejor que la validación? | Fue una temporada buena para los underdogs: ganaron el 22,1%, contra 20% de la tasa base. | 4 |
 | ¿Por qué 5 puntos para definir al underdog? | Por debajo, Pinnacle y Bet365 eligen distinto favorito en el 54% de los partidos casi parejos. | 1 |
+| ¿Por qué el gráfico mide por cada $100 y no en plata total? | Porque las estrategias apuestan distinta cantidad de veces: en plata total gana más la que más apuesta, aunque deje menos por apuesta. | 5 |
 | ¿Entonces el modelo gana plata? | No está demostrado: es la única estrategia que no pierde en ningún período, pero el +6,6% no se distingue del azar. | 5 |
 
 ## Ensayo

@@ -49,6 +49,7 @@ CORTES_RANGO = [0, 0.10, 0.20, 0.30, 0.40, 1]          # «rango de cuota»: apo
 MIN_APUESTAS_VALIDACION = 500                          # un rango con menos apuestas que esto es pura suerte
 SORTEOS = 300                                          # apostar al azar la misma cantidad de veces que el modelo
 REMUESTREOS = 2000                                     # bootstrap del intervalo de confianza del retorno
+MIN_APUESTAS_LINEA = 80                                # el retorno acumulado se dibuja desde que hay esta cantidad de apuestas
 UMBRAL_MATRIZ = 0.20                                   # la matriz de confusión corta en la tasa base, no en 50%
 
 # El partido que se usa de ejemplo en toda la página
@@ -471,23 +472,26 @@ def tabla_estrategias(val: pd.DataFrame, test: pd.DataFrame, reglas: dict, rng: 
 
 
 def sorteos(e: pd.DataFrame, n: int, rng: np.random.Generator) -> tuple[np.ndarray, pd.DataFrame]:
-    """Apostar al azar en n partidos, SORTEOS veces: el retorno final de cada sorteo y la banda del 90% central día a día."""
+    """Apostar al azar en n partidos, SORTEOS veces: el retorno final de cada sorteo y, día a día, la banda del 90% central
+    del retorno acumulado por cada $100 apostados (desde que el sorteo lleva MIN_APUESTAS_LINEA apuestas)."""
     e = e.sort_values("fecha")
     g = ganancia_si_apuesta(e).values
     finales = np.empty(SORTEOS)
-    acumulados = np.empty((SORTEOS, len(e)))
+    retornos = np.full((SORTEOS, len(e)), np.nan)
     for s in range(SORTEOS):
         elegidos = np.zeros(len(e), dtype=bool)
         elegidos[rng.choice(len(e), size=n, replace=False)] = True
         jugada = np.where(elegidos, g, 0.0)
         finales[s] = jugada.sum() / (APUESTA * n)
-        acumulados[s] = np.cumsum(jugada)
+        cuantas = np.cumsum(elegidos)
+        retornos[s] = np.where(cuantas >= MIN_APUESTAS_LINEA, np.cumsum(jugada) / np.maximum(cuantas, 1), np.nan)
     fechas = e["fecha"].values
     ultimo = pd.Series(np.arange(len(e))).groupby(fechas).max()
-    banda = pd.DataFrame({"fecha": ultimo.index, "bajo": np.percentile(acumulados[:, ultimo.values], 5, axis=0),
-                          "alto": np.percentile(acumulados[:, ultimo.values], 95, axis=0)})
+    r = retornos[:, ultimo.values]
+    validas = np.mean(~np.isnan(r), axis=0) >= 0.95   # la banda arranca cuando casi todos los sorteos ya tienen suficientes apuestas
+    banda = pd.DataFrame({"fecha": ultimo.index[validas], "bajo": np.nanpercentile(r[:, validas], 5, axis=0),
+                          "alto": np.nanpercentile(r[:, validas], 95, axis=0)})
     return finales, banda
-
 
 def grafico_regla(test: pd.DataFrame, ejemplo: pd.Series) -> alt.Chart:
     """La regla de apuesta vista como un gráfico: lo que paga la cuota contra lo que cree el modelo."""
@@ -550,53 +554,57 @@ def grafico_con_y_sin_regla(filas: list[dict]) -> alt.Chart:
 
 
 def grafico_test(test: pd.DataFrame, reglas: dict, banda: pd.DataFrame) -> alt.Chart:
-    """Ganancia acumulada sólo en el test, empezando en $0, de cada estrategia contra el azar."""
+    """Retorno acumulado por cada $100 apostados, sólo en el test, de cada estrategia contra el azar.
+    Se mide por cada $100 (y no en plata total) para que las estrategias que apuestan más veces no parezcan mejores."""
     e = test.sort_values("fecha")
     est = estrategias(e, reglas)
     claves = ["modelo", "sin_regla", "todos", "rango", "once", "nunca"]
     g = ganancia_si_apuesta(e)
-    diario = pd.DataFrame({est[k][1]: np.where(est[k][0], g, 0.0) for k in claves}).groupby(e["fecha"].values).sum().cumsum()
-    inicio = pd.DataFrame(0.0, index=[(pd.Timestamp(diario.index[0]) - pd.Timedelta(days=1)).strftime("%Y-%m-%d")], columns=diario.columns)
-    diario = pd.concat([inicio, diario])
-    largo = diario.rename_axis("fecha").reset_index().melt(id_vars="fecha", var_name="estrategia", value_name="ganancia")
+    por_dia = e["fecha"].values
+    ganado = pd.DataFrame({est[k][1]: np.where(est[k][0], g, 0.0) for k in claves}).groupby(por_dia).sum().cumsum()
+    apuestas = pd.DataFrame({est[k][1]: est[k][0].values.astype(int) for k in claves}).groupby(por_dia).sum().cumsum()
+    # cada línea arranca cuando su estrategia ya lleva MIN_APUESTAS_LINEA apuestas: antes, dos o tres resultados mueven todo
+    retorno = (ganado / apuestas.where(apuestas >= MIN_APUESTAS_LINEA)).astype(float)
     nombres = [est[k][1] for k in claves]
+    retorno[est["nunca"][1]] = 0.0
+    largo = (retorno.rename_axis("fecha").reset_index().melt(id_vars="fecha", var_name="estrategia", value_name="retorno")
+             .dropna())
     colores = [COLOR[k] if k in COLOR else c for k, c in zip(claves, [None, None, None, COLOR["mercado"], COLOR["jugadores"], None])]
     trazos = [[1, 0], [6, 4], [1, 0], [6, 4], [2, 3], [1, 0]]
     gruesos = alt.condition(f"datum.estrategia == '{nombres[0]}'", alt.value(4), alt.value(2.2))
+    escala = alt.Scale(domain=[-40, 50], clamp=True)
     x = alt.X("fecha:T", title=None, axis=alt.Axis(format="%b %Y", tickCount=6, grid=False))
-    y = alt.Y("ganancia:Q", title="Ganancia acumulada ($, apostando $100 cada vez)", axis=alt.Axis(tickCount=6, format="+,.0f"))
-    # leyenda arriba (con el mismo trazo que cada línea) y, al final de cada línea, sólo cuánto terminó: así entra también en el celular
+    y = alt.Y("retorno:Q", title="Retorno acumulado por cada $100 apostados (%)", scale=escala,
+              axis=alt.Axis(tickCount=7, labelExpr="(datum.value > 0 ? '+' : '') + datum.label + '%'"))
+    # leyenda arriba (con el mismo trazo que cada línea) y, al final de cada línea, cómo terminó: así entra también en el celular
     leyenda = alt.Legend(title=None, orient="top", columns=2, labelFontSize=12, labelLimit=150, symbolStrokeWidth=3, symbolSize=420,
                          symbolType="stroke")
     color = alt.Color("estrategia:N", scale=alt.Scale(domain=nombres, range=colores), legend=leyenda)
     banda = banda.assign(fecha=lambda d: pd.to_datetime(d["fecha"]).dt.strftime("%Y-%m-%d"))
     area = alt.Chart(banda).mark_area(color=COLOR["azar"], opacity=0.9).encode(
-        x=x, y="bajo:Q", y2="alto:Q",
-        tooltip=[alt.Tooltip("fecha:T", title="Fecha", format="%d/%m/%Y"), alt.Tooltip("bajo:Q", title="Azar, 5%", format="+,.0f"),
-                 alt.Tooltip("alto:Q", title="Azar, 95%", format="+,.0f")])
+        x=x, y=alt.Y("bajo:Q", scale=escala), y2="alto:Q",
+        tooltip=[alt.Tooltip("fecha:T", title="Fecha", format="%d/%m/%Y"), alt.Tooltip("bajo:Q", title="Azar, 5% (%)", format="+.1f"),
+                 alt.Tooltip("alto:Q", title="Azar, 95% (%)", format="+.1f")])
     lineas = alt.Chart(largo).mark_line(interpolate="step-after").encode(
         x=x, y=y, color=color, strokeWidth=gruesos,
         strokeDash=alt.StrokeDash("estrategia:N", scale=alt.Scale(domain=nombres, range=trazos), legend=leyenda),
         tooltip=[alt.Tooltip("fecha:T", title="Fecha", format="%d/%m/%Y"), alt.Tooltip("estrategia:N", title="Estrategia"),
-                 alt.Tooltip("ganancia:Q", title="Acumulado ($)", format="+,.0f")])
+                 alt.Tooltip("retorno:Q", title="Retorno por $100 (%)", format="+.1f")])
     # rótulos al final de cada línea, separados para que no se pisen
-    fin = diario.iloc[-1]
-    ultimo = diario.index[-1]
-    rango_y = max(diario.max().max(), banda["alto"].max()) - min(diario.min().min(), banda["bajo"].min())
-    sep = rango_y / 14
+    fin = retorno.iloc[-1]
+    ultimo = retorno.index[-1]
+    sep = 90 / 18
     pos = sorted(((float(fin[nm]), nm) for nm in nombres), reverse=True)
     ys = []
     for v, _ in pos:
         ys.append(min(v, ys[-1] - sep) if ys else v)
-    rot = pd.DataFrame([{"fecha": ultimo, "ganancia": yy, "estrategia": nm, "t": pesos(v)} for (v, nm), yy in zip(pos, ys)])
+    rot = pd.DataFrame([{"fecha": ultimo, "retorno": yy, "estrategia": nm, "t": signo(v / 100)} for (v, nm), yy in zip(pos, ys)])
     rotulos = alt.Chart(rot).mark_text(align="left", dx=8, fontSize=12, fontWeight="bold").encode(
         x=x, y=y, text="t:N", color=color)
-    piso = min(diario.min().min(), banda["bajo"].min())
-    azar = pd.DataFrame({"fecha": [banda["fecha"].iloc[len(banda) // 2]], "ganancia": [piso - sep * 0.8],
+    azar = pd.DataFrame({"fecha": [banda["fecha"].iloc[len(banda) // 2]], "retorno": [-36.0],
                          "t": ["gris: 90% de los sorteos al azar"]})
     rot_azar = alt.Chart(azar).mark_text(align="center", fontSize=11, fontStyle="italic", color=COLOR["tinta_suave"]).encode(x=x, y=y, text="t:N")
     return (area + lineas + rotulos + rot_azar).properties(width="container", height=400)
-
 
 # ----------------------------------------------------------------------------- 0 · el problema, 1 · los datos, 2 · lo que encontramos
 def grafico_problema(ej: dict) -> tuple[alt.Chart, dict]:

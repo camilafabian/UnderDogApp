@@ -235,7 +235,7 @@ code{font-size:.84em;background:#f0eee8;padding:1px 6px;border-radius:5px}
  html.anim .rev.in{opacity:1;transform:none}
  html.anim .grafico.rev{transform:none;opacity:1}
  html.anim .grafico.rev > div{clip-path:inset(0 100% 0 0);transition:clip-path 1.3s cubic-bezier(.4,.1,.2,1) .15s}
- html.anim .grafico.rev.in > div{clip-path:inset(0 -2% 0 0)}
+ html.anim .grafico.rev.in > div{clip-path:inset(-20% -40% -20% -20%)}
 }
 footer{background:var(--noche);color:#9aa8b0;padding:40px 0 60px;font-size:.88rem;margin-top:60px}
 footer b{color:#fff}
@@ -440,13 +440,14 @@ footer b{color:#fff}
  {{ROI_MODELO}}. En el test, una sola temporada que fue buena para los underdogs ({{TASA_TEST}} de victorias), a casi todo le fue mejor: con la regla {{ROI_TEST}}, sin la regla
  {{SIN_TEST}}, apostar a todos {{ROI_TODOS_TEST}}. Por eso la diferencia se mide en la validación: cinco temporadas y {{N_VAL}} partidos, contra una.</p>
 
- <h3 class="sub">¿Le gana a estrategias simples? Sólo la temporada de test, empezando en $0</h3>
+ <h3 class="sub">¿Le gana a estrategias simples? Sólo la temporada de test</h3>
  <div class="texto"><p>Comparamos el modelo con reglas que no necesitan ningún modelo, cada una con sus parámetros elegidos mirando sólo la validación, igual que el modelo:
  apostar a todos los underdogs, apostar sólo cuando la cuota le da al underdog {{RANGO}} (el mejor rango en validación), apostar sólo cuando el once del underdog
  es mejor que el del favorito, no apostar nunca, y apostar al azar la misma cantidad de veces que el modelo ({{SORTEOS}} sorteos).</p></div>
  <div class="grafico"><div id="g_test"></div></div>
- <p class="como-leer">Ganancia acumulada de cada estrategia a lo largo de la temporada 2015/16, apostando $100 cada vez. La banda gris es el 90% central de los sorteos al azar:
- una línea adentro de la banda no se distingue de la suerte.</p>
+ <p class="como-leer">Cuánto deja cada $100 apostados, acumulado a lo largo de la temporada 2015/16. Se mide por cada $100, y no en plata total, porque las estrategias
+ apuestan distinta cantidad de veces: «sin la regla» apuesta {{SIN_N_TEST}} veces y el modelo, {{APUESTAS_TEST}}. Cada línea arranca cuando su estrategia ya lleva 80 apuestas: al principio, con pocas apuestas, dos o tres resultados mueven todo.
+ La banda gris es el 90% central de los sorteos al azar: una línea adentro de la banda no se distingue de la suerte.</p>
  <div class="tbl tabla-grande">{{T_ESTRATEGIAS_TEST}}</div>
  <ul class="lectura">
   <li><b>Le gana a apostar a todos y al rango de cuota</b> elegido en validación ({{RANGO_TEST}} en el test). Pero «once mejor» ({{ONCE_TEST}}) y el modelo sin la regla

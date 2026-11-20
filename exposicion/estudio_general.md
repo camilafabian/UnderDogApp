@@ -163,7 +163,10 @@ temporada buena para los underdogs (ganaron 22,1%).
 | Nunca | 0% | 0% |
 | Al azar, la misma cantidad de veces (mediana de 300 sorteos) | −7,9% | −0,7% |
 
-**Ganancia acumulada en el test.** Empezando en $0: el modelo termina en +$2.672, apostar a todos en −$2.250 y el rango de cuota en −$3.627.
+**Retorno acumulado en el test.** El gráfico mide cuánto deja cada $100 apostados, no la plata total, porque las estrategias apuestan
+distinta cantidad de veces (el modelo, 404; «sin la regla», 1.720). En plata total, «sin la regla» parecía arrasar (+$11.616 contra
++$2.672) sólo porque apostaba cuatro veces más; por cada $100 quedan casi iguales (+6,8% y +6,6%). Al final de la temporada: modelo +6,6%,
+apostar a todos −0,9%, rango de cuota −5,3%, «once mejor» +8,7%.
 
 **La lectura honesta.**
 
@@ -243,6 +246,7 @@ la rehace sólo con lo que está en `docs/data/`, sin el Silver. GitHub Pages pu
 - **¿Por qué ese rango de cuota y ese umbral?** Se eligieron sólo con la validación, entre opciones fijadas antes, igual que el modelo.
 - **Si «once mejor» da más en el test, ¿por qué no lo usan?** Porque perdía en validación: elegirlo mirando el test sería hacer trampa.
 - **¿Por qué el test anda mejor que la validación?** 2015/16 fue una temporada buena para los underdogs (22,1% de victorias).
+- **¿Por qué el gráfico del test mide por cada $100 y no en plata?** Porque en plata total gana la estrategia que más veces apuesta, aunque deje menos por apuesta. Por cada $100 se comparan en la misma escala.
 - **¿Qué es la banda gris?** Lo que da apostar al azar la misma cantidad de veces que el modelo (90% central de 300 sorteos).
 - **¿Por qué mostrar sólo el test?** Es lo único que el modelo final nunca vio. La validación está en los «Cómo lo sabemos».
 
