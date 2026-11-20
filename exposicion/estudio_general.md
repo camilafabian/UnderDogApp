@@ -24,7 +24,8 @@ parte. Los números son los mismos que muestra la página.
 **Probabilidad implícita.** 1 dividido la cuota. Cuota 8,56 → 1 / 8,56 = 11,7%. Es la probabilidad que la casa le asigna a ese resultado.
 
 **Margen de la casa.** Las tres probabilidades de un partido (local, empate, visitante) suman más de 100%. En Leverkusen–Frankfurt suman
-101,9%: el 1,9% que sobra es la ganancia de la casa. Por eso apostar a ciegas pierde en el largo plazo.
+101,9%: el 1,9% que sobra es la ganancia de la casa. Ejemplo: para cobrar $100 pase lo que pase habría que apostar $70,90 a Leverkusen,
+$19,30 al empate y $11,70 a Frankfurt, $101,90 en total: se pierden $1,90 seguro. Por eso apostar a ciegas pierde en el largo plazo.
 
 **Probabilidad sin margen.** Cada probabilidad dividida por la suma (101,9%). Es la que usa el modelo como dato de entrada.
 
@@ -206,7 +207,7 @@ Lo que no cambió desde la Entrega 2: la cuota ya sabe casi todo.
 | 2 · Lo que encontramos | El rating del once contra lo que esperaba la cuota |
 | 3 · ¿El modelo predice? | Métricas, calibración, matriz de confusión (la curva ROC en «Cómo lo sabemos») |
 | 4 · ¿Sirve para apostar? | La regla con un ejemplo y la plata de cada estrategia en el test, contra el azar (con y sin la regla, en «Cómo lo sabemos») |
-| 5 · Explorá | Los 2.399 partidos del test: filtro por liga, recuadro y las estrategias recalculadas |
+| 5 · Explorá | Los 15.364 partidos predichos fuera de muestra (validación y test): filtros de liga y temporada, recuadro y las estrategias recalculadas. Con todas las temporadas, el modelo es el único positivo (+2,1%) |
 | 6 · Probá el modelo | Cargar un partido (real o inventado) y ver la probabilidad y si conviene apostar |
 
 Cada sección del tallo tiene un «Cómo lo sabemos» con el detalle técnico. En la exposición no se abren: lo importante está escrito arriba.
@@ -254,7 +255,7 @@ la rehace sólo con lo que está en `docs/data/`, sin el Silver. GitHub Pages pu
 - **¿Por qué «sin la regla» gana más plata que el modelo en el test?** Porque apuesta cuatro veces más en la mejor temporada para los underdogs. Por cada $100 deja lo mismo, y en validación pierde 5,8%.
 - **¿Por qué no mostrar las seis temporadas en el gráfico?** Porque los años de validación se usaron para elegir el modelo y las reglas: el resultado ahí es optimista. El único período limpio es el test.
 - **¿Qué es la banda gris?** Lo que da apostar al azar la misma cantidad de veces que el modelo (90% central de 300 sorteos).
-- **¿Por qué mostrar sólo el test?** Es lo único que el modelo final nunca vio. La validación está en los «Cómo lo sabemos».
+- **¿Por qué el gráfico de la plata muestra sólo el test?** Es lo único que no se usó para elegir nada. El Explorá sí muestra todas las temporadas (fuera de muestra), con un selector.
 
 **Sobre el proceso y la app**
 

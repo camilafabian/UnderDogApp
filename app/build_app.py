@@ -509,8 +509,9 @@ def grafico_regla(test: pd.DataFrame, ejemplo: pd.Series) -> alt.Chart:
                  alt.Tooltip("prob_modelo:Q", title="El modelo le da", format=".1%")])
     linea = alt.Chart(pd.DataFrame({"paga": [0, 0.45], "prob_modelo": [0, 0.45]})).mark_line(
         color=COLOR["tinta"], strokeWidth=2, strokeDash=[6, 4]).encode(x=x, y=y)
-    rot_linea = alt.Chart(pd.DataFrame({"paga": [0.405], "prob_modelo": [0.425], "t": ["lo que paga la cuota"]})).mark_text(
-        fontSize=12, fontWeight="bold", color=COLOR["tinta"], angle=315).encode(x=x, y=y, text="t:N")
+    # el rótulo de la línea, derecho y debajo de su punta (ahí no hay puntos)
+    rot_linea = alt.Chart(pd.DataFrame({"paga": [0.448], "prob_modelo": [0.355], "t": ["lo que paga la cuota"]})).mark_text(
+        align="right", fontSize=12, fontWeight="bold", color=COLOR["tinta"]).encode(x=x, y=y, text="t:N")
     zonas = alt.Chart(pd.DataFrame({"paga": [0.03, 0.30], "prob_modelo": [0.33, 0.08],
                                     "t": ["arriba: el modelo ve más chances de las que se pagan → apuesta",
                                           "abajo: se paga de menos → no apuesta"]})).mark_text(
@@ -551,41 +552,40 @@ def grafico_con_y_sin_regla(filas: list[dict]) -> alt.Chart:
     return (barras + texto + cero).properties(width="container", height=230)
 
 
-def grafico_test(test: pd.DataFrame, reglas: dict, banda: pd.DataFrame) -> alt.Chart:
-    """Ganancia acumulada en el test: cada estrategia apuesta $100 cada vez que decide apostar. Como unas apuestan más veces que
-    otras, cada línea dice cuántas veces apostó y cuánto deja por cada $100, para no confundir más plata con mejor estrategia."""
+def grafico_test(test: pd.DataFrame, reglas: dict, banda: pd.DataFrame) -> tuple[alt.Chart, list[dict]]:
+    """Ganancia acumulada en el test: cada estrategia apuesta $100 cada vez que decide apostar.
+    La leyenda la arma la página (con un ojito para mostrar u ocultar cada línea): acá se devuelven sus datos, ordenados de la
+    estrategia que más ganó a la que menos. El gráfico oculta las líneas que estén en el parámetro `ocultas`."""
     e = test.sort_values("fecha")
     est = estrategias(e, reglas)
     claves = ["modelo", "sin_regla", "todos", "rango", "once", "nunca"]
     g = ganancia_si_apuesta(e)
     cuantas = {k: int(est[k][0].sum()) for k in claves}
-    # el nombre de cada línea lleva cuántas veces apostó
-    nombre = {k: f"{est[k][1]} · {entero(cuantas[k])}" if k != "nunca" else est[k][1] for k in claves}
+    nombre = {k: est[k][1] for k in claves}
     diario = (pd.DataFrame({nombre[k]: np.where(est[k][0], g, 0.0) for k in claves})
                 .groupby(e["fecha"].values).sum().cumsum())
     inicio = pd.DataFrame(0.0, index=[(pd.Timestamp(diario.index[0]) - pd.Timedelta(days=1)).strftime("%Y-%m-%d")], columns=diario.columns)
     diario = pd.concat([inicio, diario])
     largo = diario.rename_axis("fecha").reset_index().melt(id_vars="fecha", var_name="estrategia", value_name="ganancia")
     nombres = [nombre[k] for k in claves]
-    colores = [COLOR[k] if k in COLOR else c for k, c in zip(claves, [None, None, None, COLOR["mercado"], COLOR["jugadores"], None])]
-    trazos = [[1, 0], [6, 4], [1, 0], [6, 4], [2, 3], [1, 0]]
-    gruesos = alt.condition(f"datum.estrategia == '{nombres[0]}'", alt.value(4), alt.value(2.2))
+    colores = dict(zip(claves, [COLOR["modelo"], COLOR["sin_regla"], COLOR["todos"], COLOR["mercado"], COLOR["jugadores"], COLOR["nunca"]]))
+    trazos = dict(zip(claves, [[1, 0], [6, 4], [1, 0], [6, 4], [2, 3], [1, 0]]))
+    ocultas = alt.param(name="ocultas", value=[])
+    visible = "indexof(ocultas, datum.estrategia) < 0"
+    gruesos = alt.condition(f"datum.estrategia == '{nombre['modelo']}'", alt.value(4), alt.value(2.2))
     x = alt.X("fecha:T", title=None, axis=alt.Axis(format="%b %Y", tickCount=6, grid=False))
     y = alt.Y("ganancia:Q", title="Ganancia acumulada ($), apostando $100 en cada apuesta",
               axis=alt.Axis(tickCount=6, format=",.0f",
                             labelExpr="(datum.value > 0 ? '+$' : datum.value < 0 ? '−$' : '$') + replace(datum.label, '−', '')"))
-    # leyenda arriba (con el mismo trazo que cada línea) y, al final de cada línea, cuánto terminó: así entra también en el celular
-    leyenda = alt.Legend(title=None, orient="top", columns=2, labelFontSize=12, labelLimit=320, symbolStrokeWidth=3, symbolSize=420,
-                         symbolType="stroke")
-    color = alt.Color("estrategia:N", scale=alt.Scale(domain=nombres, range=colores), legend=leyenda)
+    color = alt.Color("estrategia:N", scale=alt.Scale(domain=nombres, range=[colores[k] for k in claves]), legend=None)
     banda = banda.assign(fecha=lambda d: pd.to_datetime(d["fecha"]).dt.strftime("%Y-%m-%d"))
-    area = alt.Chart(banda).mark_area(color=COLOR["azar"], opacity=0.9).encode(
+    area = alt.Chart(banda).transform_filter("indexof(ocultas, 'azar') < 0").mark_area(color=COLOR["azar"], opacity=0.9).encode(
         x=x, y="bajo:Q", y2="alto:Q",
         tooltip=[alt.Tooltip("fecha:T", title="Fecha", format="%d/%m/%Y"), alt.Tooltip("bajo:Q", title="Azar, 5% ($)", format="+,.0f"),
                  alt.Tooltip("alto:Q", title="Azar, 95% ($)", format="+,.0f")])
-    lineas = alt.Chart(largo).mark_line(interpolate="step-after").encode(
+    lineas = alt.Chart(largo).transform_filter(visible).mark_line(interpolate="step-after").encode(
         x=x, y=y, color=color, strokeWidth=gruesos,
-        strokeDash=alt.StrokeDash("estrategia:N", scale=alt.Scale(domain=nombres, range=trazos), legend=leyenda),
+        strokeDash=alt.StrokeDash("estrategia:N", scale=alt.Scale(domain=nombres, range=[trazos[k] for k in claves]), legend=None),
         tooltip=[alt.Tooltip("fecha:T", title="Fecha", format="%d/%m/%Y"), alt.Tooltip("estrategia:N", title="Estrategia"),
                  alt.Tooltip("ganancia:Q", title="Acumulado ($)", format="+,.0f")])
     # rótulos al final de cada línea, separados para que no se pisen
@@ -593,20 +593,26 @@ def grafico_test(test: pd.DataFrame, reglas: dict, banda: pd.DataFrame) -> alt.C
     ultimo = diario.index[-1]
     rango_y = max(diario.max().max(), banda["alto"].max()) - min(diario.min().min(), banda["bajo"].min())
     sep = rango_y / 16
-    pos = sorted(((float(fin[nm]), nm) for nm in nombres), reverse=True)
+    orden = sorted(claves, key=lambda k: float(fin[nombre[k]]), reverse=True)    # de la que más ganó a la que menos
     ys = []
-    for v, _ in pos:
+    for k in orden:
+        v = float(fin[nombre[k]])
         ys.append(min(v, ys[-1] - sep) if ys else v)
-    por_cien = {nombre[k]: (fin[nombre[k]] / (APUESTA * cuantas[k]) if cuantas[k] else 0.0) for k in claves}
-    rot = pd.DataFrame([{"fecha": ultimo, "ganancia": yy, "estrategia": nm,
-                         "t": pesos(v)}
-                        for (v, nm), yy in zip(pos, ys)])
-    rotulos = alt.Chart(rot).mark_text(align="left", dx=8, fontSize=12, fontWeight="bold").encode(x=x, y=y, text="t:N", color=color)
+    rot = pd.DataFrame([{"fecha": ultimo, "ganancia": yy, "estrategia": nombre[k], "t": pesos(float(fin[nombre[k]]))}
+                        for k, yy in zip(orden, ys)])
+    rotulos = alt.Chart(rot).transform_filter(visible).mark_text(align="left", dx=8, fontSize=12, fontWeight="bold").encode(
+        x=x, y=y, text="t:N", color=color)
     piso = min(diario.min().min(), banda["bajo"].min())
     azar = pd.DataFrame({"fecha": [banda["fecha"].iloc[len(banda) // 2]], "ganancia": [piso - sep * 0.8],
                          "t": ["gris: azar, con tantas apuestas como el modelo"]})
-    rot_azar = alt.Chart(azar).mark_text(align="center", fontSize=11, fontStyle="italic", color=COLOR["tinta_suave"]).encode(x=x, y=y, text="t:N")
-    return (area + lineas + rotulos + rot_azar).properties(width="container", height=400)
+    rot_azar = alt.Chart(azar).transform_filter("indexof(ocultas, 'azar') < 0").mark_text(
+        align="center", fontSize=11, fontStyle="italic", color=COLOR["tinta_suave"]).encode(x=x, y=y, text="t:N")
+    grafico = (area + lineas + rotulos + rot_azar).add_params(ocultas).properties(width="container", height=400)
+    # la leyenda, en el mismo orden de siempre: el nombre y cuántas veces apostó
+    leyenda = [{"id": nombre[k], "nombre": f"{nombre[k]} · {entero(cuantas[k])}" if cuantas[k] else nombre[k],
+                "color": colores[k], "trazo": trazos[k], "grueso": k == "modelo"} for k in claves]
+    leyenda.append({"id": "azar", "nombre": "Azar (banda gris)", "color": COLOR["azar"], "trazo": None, "grueso": False})
+    return grafico, leyenda
 
 
 # ----------------------------------------------------------------------------- 0 · el problema, 1 · los datos, 2 · lo que encontramos
@@ -690,13 +696,14 @@ def grafico_hallazgo(t: pd.DataFrame) -> alt.Chart:
 
 
 # ----------------------------------------------------------------------------- la copa
-def grafico_explorar(ligas: list[str], reglas: dict) -> alt.Chart:
+def grafico_explorar(ligas: list[str], temporadas: list[str], reglas: dict) -> alt.Chart:
     """Ancho fijo de referencia: la página lo ajusta al ancho de la pantalla antes de dibujarlo (ver plantilla)."""
     datos = alt.UrlData("data/partidos.json")
     liga = alt.param(name="liga", value=None, bind=alt.binding_select(options=[None] + ligas, labels=["Todas las ligas"] + ligas, name="Liga"))
+    temporada = alt.param(name="temporada", value=None,
+                          bind=alt.binding_select(options=[None] + temporadas, labels=["Todas las temporadas"] + temporadas, name="Temporada"))
     zona = alt.selection_interval(name="zona", encodings=["x", "y"])
-    # sólo el test (lo que el modelo final nunca vio), igual que la sección 4; la validación queda en los «Cómo lo sabemos»
-    filtro = f"datum.temporada == '{TEST_TEMPORADA}' && (liga == null || datum.liga == liga)"
+    filtro = "(liga == null || datum.liga == liga) && (temporada == null || datum.temporada == temporada)"
     x = alt.X("prob_mercado:Q", title="Probabilidad del underdog según la cuota", axis=alt.Axis(format="%"), scale=alt.Scale(domain=[0, 0.36]))
     y = alt.Y("valor:Q", title="Valor esperado de apostarle, según el modelo", axis=alt.Axis(format="+%"), scale=alt.Scale(domain=[-0.4, 0.3]))
     detalle = [alt.Tooltip("fecha:T", title="Fecha", format="%d/%m/%Y"), alt.Tooltip("liga:N", title="Liga"),
@@ -716,7 +723,7 @@ def grafico_explorar(ligas: list[str], reglas: dict) -> alt.Chart:
     cero = alt.Chart(pd.DataFrame({"y": [0]})).mark_rule(color=COLOR["modelo"], strokeWidth=1.5, strokeDash=[6, 4]).encode(y="y:Q")
     rotulo = alt.Chart(pd.DataFrame({"y": [0], "t": ["arriba de esta línea, el modelo apuesta"]})).mark_text(
         align="left", x=6, dy=14, color=COLOR["modelo"], fontWeight="bold", fontSize=12).encode(y="y:Q", text="t:N")
-    nube = (fondo + apuestas + cero + rotulo).add_params(liga, zona).properties(width=760, height=400)
+    nube = (fondo + apuestas + cero + rotulo).add_params(liga, temporada, zona).properties(width=760, height=400)
 
     u = reglas["umbral"]
     a, b = reglas["rango"]
@@ -815,13 +822,15 @@ def armar_pagina(silver: dict, explorar: pd.DataFrame, test_casos: list[dict]) -
     t_datos = pd.DataFrame(silver["tabla_datos"])
     t_hallazgo = pd.DataFrame(silver["tabla_hallazgo"])
     tasa = silver["ganados"] / silver["partidos"]
-    ligas = sorted(test["liga"].unique())
+    ligas = sorted(e["liga"].unique())
+    temporadas = sorted(e["temporada"].unique())
+    g_test, leyenda_test = grafico_test(test, reglas, banda)
     graficos = {
         "g_problema": spec(g_problema), "g_datos": spec(grafico_datos(t_datos, tasa)), "g_hallazgo": spec(grafico_hallazgo(t_hallazgo)),
         "g_calibracion": spec(grafico_calibracion(test)), "g_matrices": spec(grafico_matrices(test, UMBRAL_MATRIZ)),
         "g_roc": spec(grafico_roc(test)), "g_regla": spec(grafico_regla(test, fila_ej)),
-        "g_con_sin": spec(grafico_con_y_sin_regla(filas)), "g_test": spec(grafico_test(test, reglas, banda)),
-        "g_explorar": spec(grafico_explorar(ligas, reglas)),
+        "g_con_sin": spec(grafico_con_y_sin_regla(filas)), "g_test": spec(g_test),
+        "g_explorar": spec(grafico_explorar(ligas, temporadas, reglas)),
         "g_probar": spec(grafico_probar()),
     }
 
@@ -871,7 +880,7 @@ def armar_pagina(silver: dict, explorar: pd.DataFrame, test_casos: list[dict]) -
         "EJ_SUMA": pct(sum(inv)), "EJ_MARGEN": pct(sum(inv) - 1),
         "EJ_PN_LOCAL": pct(inv[0] / sum(inv)), "EJ_PN_VISIT": pct(inv[2] / sum(inv)),
         "EJ_GAP": num(100 * (inv[0] - inv[2]) / sum(inv), 0),
-        "EJ_GANA_100": entero(100 * ej["cuotas"][2]), "EJ_LOCAL_100": entero(100 * ej["cuotas"][0]), "EJ_PAGA": pct(1 / fila_ej["cuota"]),
+        "EJ_GANA_100": entero(100 * ej["cuotas"][2]), "EJ_LOCAL_100": entero(100 * ej["cuotas"][0]), "EJ_EMPATE_100": entero(100 * ej["cuotas"][1]), "EJ_PAGA": pct(1 / fila_ej["cuota"]),
         "EJ_MODELO": pct(fila_ej["prob_modelo"]), "EJ_MERCADO": pct(fila_ej["prob_mercado"]),
         "EJ_P_MODELO_NUM": num(fila_ej["prob_modelo"], 3), "EJ_VALOR": signo(valor_ej), "EJ_VALOR_PESOS": entero(100 * valor_ej),
         # 1 · los datos y 2 · lo que encontramos
@@ -906,7 +915,7 @@ def armar_pagina(silver: dict, explorar: pd.DataFrame, test_casos: list[dict]) -
         "SORTEOS": str(SORTEOS),
         # «Cómo lo sabemos» que vienen del notebook
         **h, "C": silver["C"], "INTERCEPTO": num(silver["intercepto"]), "COEF_PROB": num(silver["coef_prob"]),
-        "GRAFICOS": json.dumps(graficos, ensure_ascii=False),
+        "GRAFICOS": json.dumps(graficos, ensure_ascii=False), "LEYENDA_TEST": json.dumps(leyenda_test, ensure_ascii=False),
         "MODELO": json.dumps(silver["modelo"], ensure_ascii=False),
         "CASOS": json.dumps(silver["casos"], ensure_ascii=False),
         "VEGA": VEGA, "VEGA_LITE": VEGA_LITE, "VEGA_EMBED": VEGA_EMBED,

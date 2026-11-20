@@ -108,14 +108,32 @@ code{font-size:.84em;background:#f0eee8;padding:1px 6px;border-radius:5px}
 /* el problema */
 .partido{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0 4px}
 @media (max-width:600px){.partido{grid-template-columns:1fr}}
-.resultado{background:var(--papel);border:1px solid var(--linea);border-radius:14px;padding:14px 16px;box-shadow:var(--sombra)}
-.resultado small{display:block;text-transform:uppercase;letter-spacing:.08em;font-size:.7rem;font-weight:600;color:var(--suave)}
-.resultado b{font-family:var(--serif);font-size:1.7rem;display:block;line-height:1.2}
-.resultado span{font-size:.86rem;color:var(--suave)}
+.resultado{background:var(--papel);border:1px solid var(--linea);border-radius:14px;padding:14px 16px 12px;box-shadow:var(--sombra);display:flex;flex-direction:column}
 .resultado.fav{border-top:4px solid #4a5563}.resultado.emp{border-top:4px solid #c3c9d0}.resultado.und{border-top:4px solid var(--gano)}
+.resultado .que{text-transform:uppercase;letter-spacing:.08em;font-size:.68rem;font-weight:700;color:var(--suave)}
+.resultado .quien{font-weight:700;font-size:1rem;line-height:1.25;margin:2px 0 10px;min-height:2.5em}
+.resultado .rol{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:99px;padding:1px 8px;margin-left:6px;vertical-align:2px}
+.resultado.fav .rol{background:#eceef1;color:#4a5563}.resultado.und .rol{background:var(--gano-claro);color:var(--gano)}
+.resultado .pasos{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;background:#f7f6f2;border-radius:10px;padding:10px 12px}
+.resultado .pasos small{display:block;font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--suave)}
+.resultado .pasos b{font-family:var(--serif);font-size:1.6rem;line-height:1.15;display:block}
+.resultado .pasos .flecha{color:var(--suave);font-size:1.1rem}
+.resultado .pasos .prob{text-align:right}
+.resultado.und .pasos .prob b{color:var(--gano)}
+.resultado .cuenta{font-size:.8rem;color:var(--suave);margin:8px 0 0;line-height:1.45}
+.clave-cuota{font-size:.92rem;color:var(--suave);margin:4px 0 0}
 .defs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:14px;margin:26px 0}
-.def{background:var(--papel);border:1px solid var(--linea);border-radius:14px;padding:16px 18px;font-size:.93rem}
-.def b{display:block;font-size:1rem;margin-bottom:4px}
+.def{background:var(--papel);border:1px solid var(--linea);border-radius:14px;padding:14px 18px 14px;font-size:.88rem;color:var(--suave);display:flex;flex-direction:column;gap:6px}
+.def h4{margin:0;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--suave)}
+.def .grande{font-family:var(--serif);font-size:1.75rem;line-height:1.15;color:var(--tinta);font-weight:700}
+.def .grande small{font-family:var(--sans);font-size:.85rem;font-weight:600;color:var(--suave);margin-left:4px}
+.def .fila{display:flex;align-items:baseline;gap:10px;color:var(--tinta)}
+.def .fila b{font-family:var(--serif);font-size:1.45rem;min-width:84px}
+.def .fila.und b{color:var(--gano)}
+.def .chips-si-no{display:flex;gap:8px;flex-wrap:wrap}
+.def .chips-si-no span{border-radius:99px;padding:3px 12px;font-weight:600;font-size:.85rem}
+.def .si{background:var(--gano-claro);color:var(--gano)}.def .no{background:#eceef1;color:#4a5563}
+.def .ok{color:var(--modelo);font-weight:700}
 .pregunta{background:var(--noche);color:#e9eef1;border-radius:18px;padding:22px 24px;margin:28px 0 8px}
 .pregunta b{color:#fff}.pregunta .grande{font-family:var(--serif);font-size:1.35rem;line-height:1.35;color:#fff;margin:0 0 10px}
 .pregunta ol{margin:6px 0 0;padding-left:20px}.pregunta li{margin:4px 0}
@@ -187,6 +205,14 @@ code{font-size:.84em;background:#f0eee8;padding:1px 6px;border-radius:5px}
 .chip em{font-style:normal;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--modelo)}
 .chip b{font-size:.95rem;line-height:1.25}
 .chip small{font-size:.78rem;color:var(--suave)}
+/* leyenda del gráfico de la plata: chica, como la de los otros gráficos, con un ojito para mostrar u ocultar cada línea */
+.leyenda-ojos{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,max-content));gap:2px 22px;margin:0 0 10px 60px}
+@media (max-width:600px){.leyenda-ojos{margin-left:0}}
+.leyenda-ojos button{font:inherit;font-size:.8rem;display:flex;align-items:center;gap:6px;background:none;border:0;padding:2px 0;cursor:pointer;color:var(--tinta);text-align:left}
+.leyenda-ojos button:hover .ojo{color:var(--modelo)}
+.leyenda-ojos button.apagada{opacity:.4}
+.leyenda-ojos button.apagada span{text-decoration:line-through}
+.leyenda-ojos .ojo{width:14px;height:14px;flex:none;color:#9aa1aa}
 .juntos{display:flex;gap:8px;align-items:flex-start;font-size:.8rem;line-height:1.4;color:var(--suave);background:var(--modelo-claro);border-radius:10px;padding:8px 10px;margin:8px 0 4px;cursor:pointer}
 .juntos input{margin-top:3px;accent-color:var(--modelo)}
 #g_explorar .vega-embed{display:flex;flex-direction:column;align-items:stretch}
@@ -278,22 +304,36 @@ footer b{color:#fff}
  Antes del partido, las casas de apuestas publican una <b>cuota</b> para cada uno: cuánto te devuelven por cada peso si ese resultado sale. Un ejemplo real,
  de la Bundesliga ({{EJ_FECHA}}):</p></div>
  <div class="partido">
-  <div class="resultado fav"><small>Gana el local · {{EJ_LOCAL}}</small><b>{{EJ_C_LOCAL}}</b><span>Apostás $100 y, si gana, te devuelven ${{EJ_LOCAL_100}} (tus $100 más la ganancia). Como probabilidad: 1 / {{EJ_C_LOCAL}} = <b>{{EJ_P_LOCAL}}</b></span></div>
-  <div class="resultado emp"><small>Empate</small><b>{{EJ_C_EMPATE}}</b><span>1 / {{EJ_C_EMPATE}} = <b>{{EJ_P_EMPATE}}</b></span></div>
-  <div class="resultado und"><small>Gana el visitante · {{EJ_VISIT}}</small><b>{{EJ_C_VISIT}}</b><span>Apostás $100 y, si gana, te devuelven ${{EJ_GANA_100}}. Como probabilidad: 1 / {{EJ_C_VISIT}} = <b>{{EJ_P_VISIT}}</b></span></div>
+  <div class="resultado fav"><span class="que">Gana el local</span><span class="quien">{{EJ_LOCAL}}<span class="rol">favorito</span></span>
+   <div class="pasos"><div><small>Cuota</small><b>{{EJ_C_LOCAL}}</b></div><span class="flecha">→</span><div class="prob"><small>Probabilidad</small><b>{{EJ_P_LOCAL}}</b></div></div>
+   <p class="cuenta">Apostás $100 y, si gana, cobrás ${{EJ_LOCAL_100}}. Probabilidad = 1 ÷ {{EJ_C_LOCAL}}.</p></div>
+  <div class="resultado emp"><span class="que">Empate</span><span class="quien">Ninguno de los dos</span>
+   <div class="pasos"><div><small>Cuota</small><b>{{EJ_C_EMPATE}}</b></div><span class="flecha">→</span><div class="prob"><small>Probabilidad</small><b>{{EJ_P_EMPATE}}</b></div></div>
+   <p class="cuenta">Apostás $100 y, si empatan, cobrás ${{EJ_EMPATE_100}}. Probabilidad = 1 ÷ {{EJ_C_EMPATE}}.</p></div>
+  <div class="resultado und"><span class="que">Gana el visitante</span><span class="quien">{{EJ_VISIT}}<span class="rol">underdog</span></span>
+   <div class="pasos"><div><small>Cuota</small><b>{{EJ_C_VISIT}}</b></div><span class="flecha">→</span><div class="prob"><small>Probabilidad</small><b>{{EJ_P_VISIT}}</b></div></div>
+   <p class="cuenta">Apostás $100 y, si gana, cobrás ${{EJ_GANA_100}}. Probabilidad = 1 ÷ {{EJ_C_VISIT}}.</p></div>
  </div>
+ <p class="clave-cuota"><b>La clave:</b> la probabilidad según la cuota es 1 dividido la cuota. Cuanto más baja la cuota, más probable es ese resultado para la casa de apuestas.</p>
  <div class="grafico"><div id="g_problema"></div></div>
  <p class="como-leer">Las tres probabilidades suman {{EJ_SUMA}}, no 100%. Lo que sobra ({{EJ_MARGEN}}) es el margen de la casa: paga un poco menos de lo que vale cada resultado.
  Por eso apostar a ciegas pierde en el largo plazo, y por eso ganarle a la casa es difícil.</p>
  <div class="defs">
-  <div class="def"><b>Favorito y underdog</b>Sacamos el margen (dividimos cada probabilidad por {{EJ_SUMA}}) y comparamos a los dos equipos. El favorito es el que tiene más
-   probabilidad de ganar: {{EJ_LOCAL}}, {{EJ_PN_LOCAL}}. El <b style="display:inline;color:var(--gano)">underdog</b> (el no favorito) es el otro: {{EJ_VISIT}}, {{EJ_PN_VISIT}}. El empate no es un equipo.</div>
-  <div class="def"><b>Un underdog claro: más de 5 puntos</b>Sólo usamos partidos donde favorito y underdog se separan por más de 5 puntos de probabilidad (acá, {{EJ_GAP}} puntos).
-   Por debajo, quién es el underdog depende de qué casa se mire: Pinnacle y Bet365 eligen distinto favorito en el 54% de esos partidos casi parejos.</div>
-  <div class="def"><b>Qué es una fila y qué predecimos</b>Una fila es un partido: quedan {{N}}, de 2008 a 2016. Para cada uno queremos predecir, antes de que empiece,
-   si <b style="display:inline">gana el underdog</b> (1) o no (0: empata o pierde), con las cuotas y los ratings FIFA de los once titulares.</div>
-  <div class="def"><b>De dónde sale el 20%</b>El underdog ganó {{GANADOS}} de los {{N}} partidos: el {{TASA}}, unos 2 de cada 10. Es la tasa base: un modelo
-   que no mira nada y dice siempre «20%» es el piso que cualquier modelo tiene que superar.</div>
+  <div class="def"><h4>Favorito y underdog</h4>
+   <div class="fila"><b>{{EJ_PN_LOCAL}}</b><span><strong>Favorito:</strong> {{EJ_LOCAL}}</span></div>
+   <div class="fila und"><b>{{EJ_PN_VISIT}}</b><span><strong>Underdog:</strong> {{EJ_VISIT}}</span></div>
+   <span>Probabilidades sin el margen de la casa. El empate no es un equipo.</span></div>
+  <div class="def"><h4>Un underdog claro</h4>
+   <div class="grande">más de 5 puntos<small>de diferencia</small></div>
+   <span>Acá: {{EJ_PN_LOCAL}} − {{EJ_PN_VISIT}} = {{EJ_GAP}} puntos <span class="ok">✓</span></span>
+   <span>Con menos, dos casas de apuestas eligen distinto favorito en el 54% de los partidos.</span></div>
+  <div class="def"><h4>Qué es una fila y qué predecimos</h4>
+   <div class="grande">1 fila = 1 partido<small>{{N}} en total</small></div>
+   <span>¿Gana el underdog?</span>
+   <div class="chips-si-no"><span class="si">Sí → 1</span><span class="no">Empata o pierde → 0</span></div></div>
+  <div class="def"><h4>De dónde sale el 20%</h4>
+   <div class="grande">{{GANADOS}} de {{N}}<small>= {{TASA}}</small></div>
+   <span>Unos 2 de cada 10 partidos los gana el underdog. Decir siempre «20%» es el piso que cualquier modelo tiene que superar.</span></div>
  </div>
  <div class="pregunta"><p class="grande">¿Podemos saber, antes del partido, cuándo el underdog tiene más chances de las que paga la cuota?</p>
   Lo respondemos en dos etapas, en este orden:
@@ -436,7 +476,7 @@ footer b{color:#fff}
  <div class="texto"><p>Comparamos el modelo con estrategias que no necesitan ningún modelo, cada una con su regla elegida mirando sólo la validación:
  el mismo modelo <b>sin la regla</b> (apostar si le da al underdog más de {{UMBRAL_SIN}}), apostar a todos, apostar cuando la cuota le da {{RANGO}},
  apostar cuando el once del underdog es mejor, no apostar nunca, y apostar al azar.</p></div>
- <div class="grafico"><div id="g_test"></div></div>
+ <div class="grafico"><div class="leyenda-ojos" id="leyenda_test"></div><div id="g_test"></div></div>
  <p class="como-leer">Ganancia acumulada a lo largo de 2015/16, apostando $100 cada vez que la estrategia decide apostar (en la leyenda, cuántas veces apostó cada una).
  La banda gris es lo que da apostar al azar tantas veces como el modelo: adentro de la banda, no se distingue de la suerte.</p>
  <div class="ejemplo"><b>¿Por qué otras estrategias ganan más en el test?</b> Porque 2015/16 fue {{TEMPORADA_TEST_ES}}: ganaron el {{TASA_TEST}} de los partidos
@@ -477,16 +517,16 @@ footer b{color:#fff}
 <!-- COPA 1 · EXPLORÁ -->
 <section id="explora" class="copa"><div class="env">
  <div class="etiqueta"><i>5</i>Explorá</div>
- <h2>Los {{N_TEST}} partidos de la temporada de test, que el modelo nunca vio, y qué habría hecho en cada uno</h2>
- <div class="texto"><p class="lead">Cada punto es un partido de 2015/16. Los grises son los que el modelo dejó pasar; los de color, sus apuestas: azul si el underdog ganó,
- gris oscuro si perdió. Elegí una liga o <b>arrastrá un rectángulo</b> sobre una zona: las barras de abajo recalculan cuánto habría ganado el modelo y cada
- estrategia simple de la sección 4. <b>Hacé clic en un partido</b> para ver su ficha.</p></div>
+ <h2>Los {{N_EXPLORAR}} partidos que el modelo predijo sin haberlos visto, y qué habría hecho en cada uno</h2>
+ <div class="texto"><p class="lead">Cada punto es un partido. Los grises son los que el modelo dejó pasar; los de color, sus apuestas: azul si el underdog ganó,
+ gris oscuro si perdió. Elegí una liga o una temporada, o <b>arrastrá un rectángulo</b> sobre una zona: las barras de abajo recalculan cuánto habría ganado
+ el modelo y cada estrategia simple de la sección 4. <b>Hacé clic en un partido</b> para ver su ficha.</p></div>
  <div class="grafico"><div id="g_explorar"></div></div>
  <div class="tarjeta" id="ficha"></div>
- <p class="como-leer">Son los mismos partidos que la sección 4: el test, predicho por el modelo final. La validación (2010–2015) está en los «Cómo lo sabemos». Doble clic borra el rectángulo.</p>
+ <p class="como-leer">De 2010 a 2015, cada partido lo predice un modelo entrenado únicamente con los anteriores; los de 2015/16, el modelo final, que nunca los vio. Doble clic borra el rectángulo.</p>
  <div class="cambio"><b>Una decisión de diseño que cambiamos.</b> La primera versión de este panel mostraba los 17.959 partidos con lo que
  decía el modelo final, y las barras daban que el modelo ganaba +4,6%. Ese número era optimista: el modelo final había entrenado con
- la mayoría de esos partidos. Después mostramos sólo los partidos predichos sin haberlos visto, y ahora, para la exposición, sólo el test.
+ la mayoría de esos partidos. Ahora sólo están los partidos que cada modelo predijo sin haberlos visto, y el número honesto es mucho más chico.
  También sacamos del eje vertical la probabilidad del modelo (que casi copiaba a la de la cuota y dejaba todo sobre una diagonal) y pusimos el valor esperado, que es lo que decide.</div>
 </div></section>
 
@@ -539,6 +579,7 @@ footer b{color:#fff}
 const GRAFICOS = {{GRAFICOS}};
 const M = {{MODELO}};
 const CASOS = {{CASOS}};
+const LEYENDA_TEST = {{LEYENDA_TEST}};
 const vistas = window.vistas = {};   // en window para poder inspeccionarlas desde la consola
 
 // números y fechas en castellano en todos los gráficos (coma decimal, punto de miles, meses en español)
@@ -583,6 +624,29 @@ Promise.all(Object.entries(GRAFICOS).map(([id, spec]) =>
   vistas.g_explorar.addEventListener("click", (_, item) => { if (item && item.datum && item.datum.partido) ficha(item.datum); });
   cargarCaso(0);
 }).catch(e => console.error(e));
+// --- leyenda del gráfico de la plata: tocar una estrategia la oculta o la vuelve a mostrar
+const OJO = `<svg class="ojo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>`;
+const OJO_NO = `<svg class="ojo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l18 18"/><path d="M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 4.4-1"/></svg>`;
+const ocultas = new Set();
+function muestra(it) {
+  if (!it.trazo) return `<svg width="26" height="12"><rect x="1" y="2" width="24" height="8" rx="2" fill="${it.color}"/></svg>`;
+  const guiones = it.trazo[1] ? `stroke-dasharray="${it.trazo.join(",")}"` : "";
+  return `<svg width="26" height="12"><line x1="1" y1="6" x2="25" y2="6" stroke="${it.color}" stroke-width="${it.grueso ? 3.5 : 2.5}" ${guiones}/></svg>`;
+}
+function dibujarLeyenda() {
+  document.getElementById("leyenda_test").innerHTML = LEYENDA_TEST.map((it, i) =>
+    `<button type="button" data-i="${i}" class="${ocultas.has(it.id) ? "apagada" : ""}" aria-pressed="${!ocultas.has(it.id)}"
+      title="${ocultas.has(it.id) ? "Mostrar" : "Ocultar"}">${ocultas.has(it.id) ? OJO_NO : OJO}${muestra(it)}<span>${it.nombre}</span></button>`).join("");
+}
+dibujarLeyenda();
+document.getElementById("leyenda_test").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  const id = LEYENDA_TEST[+b.dataset.i].id;
+  ocultas.has(id) ? ocultas.delete(id) : ocultas.add(id);
+  dibujarLeyenda();
+  if (vistas.g_test) vistas.g_test.signal("ocultas", [...ocultas]).runAsync();
+});
+
 // los gráficos que están adentro de un «Cómo lo sabemos» cerrado se dibujan sin ancho: al abrirlo, se recalculan
 document.querySelectorAll("details").forEach(d => d.addEventListener("toggle", () => {
   if (d.open) requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));

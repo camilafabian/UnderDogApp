@@ -337,9 +337,8 @@ Una página estática (`docs/index.html`) con forma de copa de martini, contada 
 | 1 · Los datos | ¿Cuánto gana el underdog y de qué depende? |
 | 2 · Lo que encontramos | ¿Los jugadores agregan algo a la cuota? |
 | 3 · ¿El modelo predice? (etapa 1) | ¿Cuánto acierta y cuánto se equivoca, sin hablar de plata? Métricas contra dos pisos, calibración, matriz de confusión (y la curva ROC en «Cómo lo sabemos») |
-| 4 · ¿Sirve para apostar? (etapa 2) | ¿La regla de apuesta le gana a estrategias simples? La regla con un ejemplo, el modelo con y sin la regla, y la ganancia acumulada sólo en el test contra estrategias simples y el azar |
-| El recorrido | Qué concluimos en cada entrega y por qué cambió |
-| 5 · Explorá | Los 2.399 partidos del test (2015/16), con filtro de liga, recuadro y las mismas estrategias de la sección 4 |
+| 4 · ¿Sirve para apostar? (etapa 2) | ¿La regla de apuesta le gana a estrategias simples? La regla con un ejemplo y la plata de cada estrategia en el test ($100 por apuesta, con un ojito para mostrar u ocultar cada una) contra el azar |
+| 5 · Explorá | Los 15.364 partidos predichos fuera de muestra, con filtros de liga y temporada, recuadro y las mismas estrategias de la sección 4 |
 | 6 · Probá el modelo | Cargás las cuotas y los ratings de un partido y la página calcula la probabilidad y si conviene apostar |
 
 Cada sección del tallo tiene su «Cómo lo sabemos» con el detalle técnico. Las estrategias de comparación (modelo sin la regla,

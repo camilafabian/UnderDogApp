@@ -46,10 +46,11 @@ nos devolvían $856. Si dividimos 1 por la cuota, obtenemos una probabilidad: 11
 
 > **En pantalla:** la barra de probabilidades.
 
-Las tres suman 101,9%, no 100%. Ese 1,9% que sobra es el margen de la casa: paga un poco menos de lo que vale cada resultado.
-Por eso apostar a ciegas pierde en el largo plazo.
+Las tres suman 101,9%, no 100%. Ese 1,9% que sobra es el margen de la casa. Un ejemplo: si quisiéramos cobrar $100 pase lo que pase,
+tendríamos que apostar $70,90 a Leverkusen, $19,30 al empate y $11,70 a Frankfurt: $101,90 en total para cobrar $100. Perdemos $1,90
+seguro. Por eso apostar a ciegas pierde en el largo plazo.
 
-> **En pantalla:** las cuatro tarjetas de definiciones.
+> **En pantalla:** las cuatro tarjetas de definiciones (los números grandes).
 
 Quitando el margen, el favorito es el equipo con más probabilidad de ganar. Sólo usamos partidos donde favorito y underdog se separan
 por más de 5 puntos, porque por debajo dos casas de apuestas pueden elegir distinto favorito. Una fila es un partido. El underdog ganó
@@ -189,7 +190,7 @@ La conclusión de la etapa 2: no le ganamos a las casas de apuestas, pero dejamo
 
 > **En pantalla:** 5 · Explorá y 6 · Probá el modelo, sin interactuar.
 
-La página tiene dos secciones para el usuario. En Explorá están los 2.399 partidos del test: se puede filtrar por liga o seleccionar una
+La página tiene dos secciones para el usuario. En Explorá están los 15.364 partidos que el modelo predijo sin haberlos visto: se puede filtrar por liga o temporada, o seleccionar una
 zona, y las barras recalculan cuánto habría ganado cada estrategia. En Probá el modelo se carga un partido, con sus cuotas y sus titulares,
 y la página calcula la probabilidad y si conviene apostar. Como el modelo es una fórmula, corre en el navegador.
 
