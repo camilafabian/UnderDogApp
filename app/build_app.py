@@ -726,11 +726,11 @@ def grafico_explorar(ligas: list[str], temporadas: list[str], reglas: dict) -> a
         size=38, opacity=0.85, stroke="white", strokeWidth=0.6, clip=True).encode(
         x=x, y=y, tooltip=detalle, order=alt.Order("resultado:N", sort="descending"),  # los que ganaron se dibujan encima
         color=alt.Color("resultado:N", scale=RESULTADO, title="Apuestas del modelo",
-                        legend=alt.Legend(orient="top-left", direction="horizontal", titleFontSize=12, labelFontSize=12)))
+                        legend=alt.Legend(orient="top", direction="horizontal", titleFontSize=12, labelFontSize=12, offset=8)))
     cero = alt.Chart(pd.DataFrame({"y": [0]})).mark_rule(color=COLOR["modelo"], strokeWidth=1.5, strokeDash=[6, 4]).encode(y="y:Q")
     rotulo = alt.Chart(pd.DataFrame({"y": [0], "t": ["arriba de esta línea, el modelo apuesta"]})).mark_text(
         align="left", x=6, dy=14, color=COLOR["modelo"], fontWeight="bold", fontSize=12).encode(y="y:Q", text="t:N")
-    nube = (fondo + apuestas + cero + rotulo).add_params(liga, temporada, zona).properties(width=760, height=400)
+    nube = (fondo + apuestas + cero + rotulo).add_params(liga, temporada, zona).properties(width=760, height=300)
 
     u = reglas["umbral"]
     a, b = reglas["rango"]
@@ -757,22 +757,26 @@ def grafico_explorar(ligas: list[str], temporadas: list[str], reglas: dict) -> a
         "Once mejor que el del favorito": f"datum.n_once > 0 ? 100 * datum.suma_once / ({APUESTA} * datum.n_once) : 0",
     }).transform_fold(orden, as_=["estrategia", "roi"])
     escala_roi = alt.Scale(domain=[-40, 40], clamp=True)
-    barras = plata.mark_bar(height=20, cornerRadius=3).encode(
-        y=alt.Y("estrategia:N", title=None, sort=orden, axis=alt.Axis(labelFontSize=12, labelFontWeight="bold", labelLimit=240)),
+    # los nombres van escritos arriba de cada barra (no en el eje): así ningún panel reserva margen a la izquierda y la nube usa todo el ancho
+    fila = alt.Y("estrategia:N", title=None, sort=orden, axis=None)
+    barras = plata.mark_bar(height=14, cornerRadius=3).encode(
+        y=fila,
         x=alt.X("roi:Q", title="Retorno por cada $100 apostados (%), en lo filtrado", scale=escala_roi),
         color=alt.Color("estrategia:N", scale=escala, legend=None),
         tooltip=[alt.Tooltip("estrategia:N", title="Estrategia"), alt.Tooltip("roi:Q", title="Retorno %", format="+.1f"),
                  alt.Tooltip("partidos:Q", title="Partidos filtrados", format=","),
                  alt.Tooltip("apuestas:Q", title="Apuestas del modelo", format=",")])
-    pos_texto = dict(y=alt.Y("estrategia:N", sort=orden), x=alt.X("roi:Q", scale=escala_roi), text=alt.Text("roi:Q", format="+.1f"))
+    pos_texto = dict(y=fila, x=alt.X("roi:Q", scale=escala_roi), text=alt.Text("roi:Q", format="+.1f"))
     texto = (plata.transform_filter("datum.roi >= 0").mark_text(align="left", dx=6, fontWeight="bold", fontSize=13).encode(**pos_texto)
-             + plata.transform_filter("datum.roi < 0").mark_text(align="right", dx=-6, fontWeight="bold", fontSize=13).encode(**pos_texto))
+             + plata.transform_filter("datum.roi < 0").mark_text(align="right", dx=-6, fontWeight="bold", fontSize=13).encode(**pos_texto)
+             + plata.mark_text(align="left", baseline="bottom", dy=-10, fontWeight="bold", fontSize=12, color=COLOR["tinta"]).encode(
+                 y=fila, x=alt.value(0), text="estrategia:N"))
     resumen = alt.Chart(datos).transform_filter(filtro).transform_filter(zona).transform_aggregate(
         partidos="count()", apuestas="sum(apuesta)").transform_calculate(
         t="format(datum.partidos, ',') + ' partidos en la selección · el modelo apuesta en ' + format(datum.apuestas, ',')"
     ).mark_text(align="left", fontSize=13, fontWeight="bold", color=COLOR["tinta"]).encode(text="t:N").properties(width=760, height=20)
     cero_roi = alt.Chart(pd.DataFrame({"x": [0]})).mark_rule(color=COLOR["tinta_suave"]).encode(x="x:Q")
-    return alt.vconcat(nube, resumen, (barras + texto + cero_roi).properties(width=760, height=170),
+    return alt.vconcat(nube, resumen, (barras + texto + cero_roi).properties(width=760, height=230),
                        spacing=14).resolve_scale(color="independent")
 
 

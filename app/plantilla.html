@@ -686,13 +686,9 @@ function ajustarAncho(id, spec) {
     if (angosto) { spec.vconcat = spec.hconcat; delete spec.hconcat; spec.vconcat.forEach(c => c.width = Math.max(150, libre - 120)); }
     else spec.hconcat.forEach(c => c.width = Math.min(300, Math.max(150, (libre - n * 115 - (n - 1) * 30) / n)));
   } else if (spec.vconcat) {
-    // la exploración: la nube usa casi todo el ancho; las barras dejan lugar a los nombres de las estrategias
-    const nombres = angosto ? 130 : 230;
-    spec.vconcat.forEach((c, i) => {
-      // en un gráfico apilado todos los paneles dejan a la izquierda el lugar de los nombres más largos: todos usan el mismo ancho
-      c.width = Math.max(140, libre - nombres - 30);
-      if (angosto && c.layer) c.layer.forEach(l => { const y = l.encoding && l.encoding.y; if (y && y.axis) y.axis.labelLimit = nombres - 10; });
-    });
+    // la exploración: los nombres de las estrategias van arriba de cada barra, así que todos los paneles usan todo el ancho
+    // (sólo dejan a la izquierda el lugar del eje vertical de la nube)
+    spec.vconcat.forEach(c => { c.width = Math.max(140, libre - 75); });
   }
   return spec;
 }
