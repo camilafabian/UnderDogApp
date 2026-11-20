@@ -328,11 +328,23 @@ Silver del DAG (PostgreSQL) es idéntico.
 
 ## Entrega 4 — La aplicación
 
-Una página estática (`docs/index.html`) con forma de copa de martini: portada con la idea central, tres secciones guiadas (los
-datos, lo que encontramos, el modelo), cada una con su «Cómo lo sabemos», y dos secciones para el usuario: **Explorá** (los 15.364
-partidos predichos fuera de muestra, con filtros de liga y temporada, recuadro con el mouse y el detalle de cada partido) y
-**Probá el modelo** (cargás las cuotas y los ratings de un partido y la página calcula la probabilidad y si conviene apostar).
-Los gráficos son de Altair; el modelo es una fórmula, así que corre en el navegador sin servidor.
+Una página estática (`docs/index.html`) con forma de copa de martini, contada como una historia en dos etapas:
+
+| Sección | Pregunta que responde |
+|---|---|
+| Portada | ¿De qué se trata? La pregunta, la idea central y tres cifras explicadas en palabras |
+| 0 · El problema | ¿Qué es una cuota, un favorito y un underdog? Un partido real, el margen de la casa, qué es una fila y de dónde sale el 20% |
+| 1 · Los datos | ¿Cuánto gana el underdog y de qué depende? |
+| 2 · Lo que encontramos | ¿Los jugadores agregan algo a la cuota? |
+| 3 · ¿El modelo predice? (etapa 1) | ¿Cuánto acierta y cuánto se equivoca, sin hablar de plata? Métricas contra dos pisos, calibración, matriz de confusión (y la curva ROC en «Cómo lo sabemos») |
+| 4 · ¿Sirve para apostar? (etapa 2) | ¿La regla de apuesta le gana a estrategias simples? La regla con un ejemplo, el modelo con y sin la regla, y la ganancia acumulada sólo en el test contra estrategias simples y el azar |
+| El recorrido | Qué concluimos en cada entrega y por qué cambió |
+| 5 · Explorá | Los 2.399 partidos del test (2015/16), con filtro de liga, recuadro y las mismas estrategias de la sección 4 |
+| 6 · Probá el modelo | Cargás las cuotas y los ratings de un partido y la página calcula la probabilidad y si conviene apostar |
+
+Cada sección del tallo tiene su «Cómo lo sabemos» con el detalle técnico. Las estrategias de comparación (modelo sin la regla,
+rango de cuota) eligen su parámetro sólo con la validación, igual que el modelo, y recién después se miran en el test. Los gráficos
+son de Altair, con colores pensados para daltonismo; el modelo es una fórmula, así que corre en el navegador sin servidor.
 
 **Cómo se regenera desde cero** (si cambian los datos):
 
@@ -349,7 +361,18 @@ Los gráficos son de Altair; el modelo es una fórmula, así que corre en el nav
 ```
 
 `app/build_app.py` lee Silver, la auditoría y lo que dejó el notebook, **verifica que la fórmula de la página dé lo mismo que el
-`.joblib`** (falla si no), y escribe `docs/index.html` y `docs/data/partidos.json` a partir de la plantilla `app/plantilla.html`.
+`.joblib`** (falla si no), y escribe `docs/index.html` y `docs/data/` a partir de la plantilla `app/plantilla.html`:
+`partidos.json` (las predicciones fuera de muestra), `partidos_test.json` (los partidos de 2015/16 para «Probá el modelo») y
+`silver_resumen.json` (lo que sólo se calcula con el Silver y el notebook: embudo, tablas de la Entrega 3, la fórmula y los datos
+de los gráficos de las secciones 1 y 2).
+
+**Regenerarla sin el Silver.** Todo lo demás (métricas, calibración, matriz de confusión, la regla, las estrategias de comparación,
+los sorteos al azar y la ganancia acumulada) se calcula sobre `partidos.json`. Por eso la página se puede rehacer desde el
+repositorio, sin datos ni modelos, y da lo mismo que la corrida completa:
+
+```bash
+.venv/Scripts/python app/build_app.py --desde-publicado
+```
 
 **Verla en local** (la exploración carga `data/partidos.json`, así que hace falta un servidor; abrir el archivo con doble clic no alcanza):
 
