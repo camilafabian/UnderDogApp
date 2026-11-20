@@ -2,7 +2,7 @@
 
 **Proyecto integrador · Ciencia de Datos · UTN FRM · 5K10**
 
-Matias Almendros · Juan Caballero · Camila Fabian · Ignacio Fernandez · Ignacio Miqueleiz · Matias Roiz
+Matias Almendros · Juan Caballero · Camila Fabian · Ignacio Fernandez · Matias Mann · Ignacio Miqueleiz · Matias Roiz
 
 Esta guía explica el proyecto entero, de punta a punta, para que cualquiera del grupo pueda responder una pregunta sobre cualquier
 parte. Los números son los mismos que muestra la página.
@@ -110,16 +110,16 @@ Ninguno supera a la logística por más que el desvío. Los jugadores solos dan 
 **Las métricas, en palabras.**
 
 - **AUC:** si tomás un partido que ganó el underdog y otro que no, qué tan seguido el modelo le dio más chance al primero. 0,5 = tirar una moneda; 1 = siempre.
-- **Log-loss y Brier:** cuánto se alejan, en promedio, las probabilidades de lo que pasó. Menos es mejor.
+- **Log-loss:** cuánto se alejan, en promedio, las probabilidades de lo que pasó. Menos es mejor.
 - **Accuracy no sirve:** decir siempre «no gana» acierta el 80% sin mirar nada.
 
 **Resultado en el test (2015/16, 2.399 partidos).**
 
-| | AUC | Log-loss | Brier |
-|---|---|---|---|
-| Piso: decir siempre 20% | 0,500 | 0,5293 | 0,1725 |
-| La cuota sola | 0,656 | 0,4983 | 0,1634 |
-| Nuestro modelo | 0,660 | 0,4981 | 0,1633 |
+| | AUC | Log-loss |
+|---|---|---|
+| Piso: decir siempre 20% | 0,500 | 0,5293 |
+| La cuota sola | 0,656 | 0,4983 |
+| Nuestro modelo | 0,660 | 0,4981 |
 
 **Calibración.** Diez grupos de partidos según la probabilidad que dio cada uno; se compara esa probabilidad con lo que pasó. El modelo
 y la cuota siguen la diagonal: cuando dicen 30%, gana alrededor de 3 de cada 10.
@@ -202,7 +202,7 @@ Lo que no cambió desde la Entrega 2: la cuota ya sabe casi todo.
 | Sección | Qué muestra |
 |---|---|
 | Portada | El ejemplo de Barcelona–Valencia, las dos preguntas, favorito y underdog, los datos |
-| 0 · El problema | Las cuotas de un partido real, el margen de la casa, las definiciones y el 20% |
+| 0 · El contexto | Las cuotas de un partido real, el margen de la casa, las definiciones y el 20% |
 | 1 · Los datos | Cuánto gana el underdog según qué tan favorito es el favorito |
 | 2 · Lo que encontramos | El rating del once contra lo que esperaba la cuota |
 | 3 · ¿El modelo predice? | Métricas, calibración, matriz de confusión (la curva ROC en «Cómo lo sabemos») |
@@ -274,7 +274,7 @@ la rehace sólo con lo que está en `docs/data/`, sin el Silver. GitHub Pages pu
 | Margen de la casa | Lo que las probabilidades suman por encima de 100% |
 | Tasa base | Proporción de partidos que gana el underdog (20%) |
 | AUC | Qué tan bien ordena el modelo los partidos (0,5 = azar) |
-| Log-loss / Brier | Cuánto se equivocan las probabilidades (menos es mejor) |
+| Log-loss | Cuánto se equivocan las probabilidades (menos es mejor) |
 | Calibración | Que lo que dice el modelo coincida con lo que pasa |
 | Valor esperado | Lo que se espera ganar por peso apostado en el largo plazo |
 | Validación temporal | Entrenar con el pasado y probar con lo que viene |

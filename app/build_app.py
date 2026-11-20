@@ -66,7 +66,7 @@ COLOR = {"modelo": "#0f7f73", "sin_regla": "#69c2b6", "mercado": "#e08a1e", "tod
 RESULTADO = alt.Scale(domain=["Ganó el underdog", "No ganó"], range=[COLOR["gano"], COLOR["no_gano"]])
 
 NOMBRES_GAPS = {
-    "nofav_xi_overall_mean_gap": "Rating medio del XI", "nofav_top3_overall_gap": "Rating de los 3 mejores",
+    "nofav_xi_overall_mean_gap": "Rating medio de los 11", "nofav_top3_overall_gap": "Rating de los 3 mejores",
     "nofav_best_overall_gap": "Mejor jugador", "nofav_worst_overall_gap": "Peor titular",
     "nofav_def_overall_gap": "Rating de la defensa", "nofav_mid_overall_gap": "Rating del mediocampo",
     "nofav_att_overall_gap": "Rating del ataque", "nofav_best_finishing_gap": "Mejor definición",
@@ -312,7 +312,7 @@ def metricas(test: pd.DataFrame, tasa_base: float) -> list[dict]:
     for nombre, p in [(f"Piso: decir siempre {pct(tasa_base, 0)} (la tasa base)", np.full(len(y), tasa_base)),
                       ("La cuota sola (probabilidad sin margen)", test["prob_mercado"].values),
                       ("Nuestro modelo (cuota + jugadores)", test["prob_modelo"].values)]:
-        filas.append({"": nombre, "AUC": auc(y, p), "log-loss": log_loss(y, p), "Brier": float(np.mean((y - p) ** 2))})
+        filas.append({"": nombre, "AUC": auc(y, p), "log-loss": log_loss(y, p)})
     return filas
 
 
@@ -325,21 +325,27 @@ def grafico_calibracion(test: pd.DataFrame) -> alt.Chart:
         t["quien"] = quien
         filas.append(t)
     t = pd.concat(filas)
-    escala = alt.Scale(domain=["Nuestro modelo", "La cuota"], range=[COLOR["modelo"], COLOR["mercado"]])
-    trazo = alt.Scale(domain=["Nuestro modelo", "La cuota"], range=[[1, 0], [6, 4]])
+    # la diagonal entra en la leyenda como una serie más; la leyenda dibuja trazos, así se ve cuál es la punteada
+    perfecto = "Acierto perfecto: lo que dice es lo que pasa"
+    series = ["Nuestro modelo", "La cuota", perfecto]
+    escala = alt.Scale(domain=series, range=[COLOR["modelo"], COLOR["mercado"], "#8a929c"])
+    trazo = alt.Scale(domain=series, range=[[1, 0], [7, 5], [2, 3]])
+    leyenda = dict(title=None, orient="top-left", direction="vertical", labelFontSize=13, labelLimit=400,
+                   symbolType="stroke", symbolStrokeWidth=3, symbolSize=500)
+    color = alt.Color("quien:N", scale=escala, legend=alt.Legend(**leyenda))
+    dash = alt.StrokeDash("quien:N", scale=trazo, legend=alt.Legend(**leyenda))
     eje = alt.Scale(domain=[0, 0.5])
-    x = alt.X("dijo:Q", title="Probabilidad que dio (promedio del grupo)", axis=alt.Axis(format="%", tickCount=5), scale=eje)
-    y = alt.Y("paso:Q", title="Proporción que ganó de verdad", axis=alt.Axis(format="%", tickCount=5), scale=eje)
-    diag = alt.Chart(pd.DataFrame({"dijo": [0, 0.5], "paso": [0, 0.5]})).mark_line(color="#b9bfc7", strokeWidth=1.5).encode(x=x, y=y)
-    rot = alt.Chart(pd.DataFrame({"dijo": [0.36], "paso": [0.43], "t": ["sobre la diagonal: lo que dice es lo que pasa"]})).mark_text(
-        fontSize=12, fontStyle="italic", color=COLOR["tinta_suave"], angle=315).encode(x=x, y=y, text="t:N")
+    x = alt.X("dijo:Q", title="Probabilidad que dio al underdog (promedio del grupo)",
+              axis=alt.Axis(format="%", tickCount=5, labelFontSize=14, titleFontSize=15, titlePadding=10), scale=eje)
+    y = alt.Y("paso:Q", title="Cuántos ganó de verdad",
+              axis=alt.Axis(format="%", tickCount=5, labelFontSize=14, titleFontSize=15, titlePadding=10), scale=eje)
+    diag = alt.Chart(pd.DataFrame({"dijo": [0, 0.5], "paso": [0, 0.5], "quien": [perfecto] * 2})).mark_line(strokeWidth=1.8).encode(
+        x=x, y=y, color=color, strokeDash=dash)
     lineas = alt.Chart(t).mark_line(point=alt.OverlayMarkDef(size=70, filled=True), strokeWidth=2.5).encode(
-        x=x, y=y,
-        color=alt.Color("quien:N", scale=escala, legend=alt.Legend(title=None, orient="top-left", symbolStrokeWidth=3, labelFontSize=12)),
-        strokeDash=alt.StrokeDash("quien:N", scale=trazo, legend=alt.Legend(title=None, orient="top-left")),
+        x=x, y=y, color=color, strokeDash=dash,
         tooltip=[alt.Tooltip("quien:N", title=""), alt.Tooltip("dijo:Q", title="Dijo", format=".1%"),
                  alt.Tooltip("paso:Q", title="Ganó de verdad", format=".1%"), alt.Tooltip("partidos:Q", title="Partidos")])
-    return (diag + rot + lineas).properties(width="container", height=330)
+    return (diag + lineas).properties(width="container", height=330)
 
 
 def matriz(test: pd.DataFrame, col: str, umbral: float) -> dict:
@@ -681,9 +687,10 @@ def grafico_hallazgo(t: pd.DataFrame) -> alt.Chart:
     trazo = alt.Scale(domain=[real, cuota], range=[[1, 0], [7, 5]])
     leyenda = dict(title=None, orient="top-left", direction="vertical", labelFontSize=13, symbolStrokeWidth=3.5, symbolSize=500,
                    symbolType="stroke", labelFontWeight="bold", labelLimit=400)
-    x = alt.X("quintil:O", sort=etiquetas, title="Rating medio del XI: underdog − favorito (cinco grupos de igual tamaño)",
-              axis=alt.Axis(labelAngle=0, labelFontSize=12))
-    y = alt.Y("valor:Q", title="Proporción", axis=alt.Axis(format="%", tickCount=4), scale=alt.Scale(domain=[0, 0.34]))
+    x = alt.X("quintil:O", sort=etiquetas, title="Rating medio de los 11: underdog − favorito (cinco grupos de igual tamaño)",
+              axis=alt.Axis(labelAngle=0, labelFontSize=14, titleFontSize=15, titlePadding=10))
+    y = alt.Y("valor:Q", title="Proporción", axis=alt.Axis(format="%", tickCount=4, labelFontSize=14, titleFontSize=15, titlePadding=10),
+              scale=alt.Scale(domain=[0, 0.34]))
     lineas = alt.Chart(largo).mark_line(point=alt.OverlayMarkDef(size=90, filled=True), strokeWidth=3.5).encode(
         x=x, y=y, color=alt.Color("serie:N", scale=escala, legend=alt.Legend(**leyenda)),
         strokeDash=alt.StrokeDash("serie:N", scale=trazo, legend=alt.Legend(**leyenda)),
@@ -834,8 +841,8 @@ def armar_pagina(silver: dict, explorar: pd.DataFrame, test_casos: list[dict]) -
         "g_probar": spec(grafico_probar()),
     }
 
-    t_met = tabla_html([{"": r[""], "AUC (más es mejor)": num(r["AUC"]), "log-loss (menos es mejor)": num(r["log-loss"], 4),
-                         "Brier (menos es mejor)": num(r["Brier"], 4)} for r in met], destacar=2)
+    t_met = tabla_html([{"": r[""], "AUC (más es mejor)": num(r["AUC"]), "log-loss (menos es mejor)": num(r["log-loss"], 4)}
+                        for r in met], destacar=2)
     principales = ["modelo", "sin_regla", "todos", "rango", "once", "nunca"]
     t_estr_test = tabla_html([{"Apostar $100 al underdog cuando…": r["cuando"], "apuestas": entero(r["test_n"]),
                                "retorno por $100": signo(r["test_r"]) if r["test_n"] else "—",
@@ -946,6 +953,8 @@ def construir(desde_publicado: bool = False) -> None:
         (DATOS / "silver_resumen.json").write_text(json.dumps(silver, ensure_ascii=False, indent=1), encoding="utf-8")
         origen = f"el Silver y el notebook (fórmula = notebook, dif. {dif:.1e})"
     (SALIDA / ".nojekyll").write_text("", encoding="utf-8")
+    # el notebook nombra las columnas con «XI»; en la página se lee «11»
+    silver = json.loads(json.dumps(silver, ensure_ascii=False).replace("del XI", "de los 11"))
     pagina = armar_pagina(silver, explorar, test_casos)
     (SALIDA / "index.html").write_text(pagina, encoding="utf-8")
     print(f"App generada en {SALIDA / 'index.html'} ({len(pagina) / 1024:.0f} KB) desde {origen}: {len(explorar):,} partidos fuera de muestra.")

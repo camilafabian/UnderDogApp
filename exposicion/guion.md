@@ -6,7 +6,7 @@
 
 | # | Parte de la página | Tiempo |
 |---|---|---|
-| 1 | Portada y 0 · El problema | 0:00 – 2:30 |
+| 1 | Portada y 0 · El contexto | 0:00 – 2:30 |
 | 2 | 1 · Los datos y 2 · Lo que encontramos | 2:30 – 5:00 |
 | 3 | 3 · ¿El modelo predice? (etapa 1) | 5:00 – 7:30 |
 | 4 | 4 · ¿Sirve para apostar? La regla, con y sin | 7:30 – 10:00 |
@@ -22,9 +22,9 @@
 
 <div class="salto"></div>
 
-## Integrante 1 · Portada y El problema
+## Integrante 1 · Portada y El contexto
 
-<p class="meta">0:00 – 2:30 · Secciones: portada y 0 · El problema</p>
+<p class="meta">0:00 – 2:30 · Secciones: portada y 0 · El contexto</p>
 
 > **En pantalla:** la portada.
 
@@ -36,7 +36,7 @@ Lo vamos a responder con dos preguntas: primero, si se puede predecir quién gan
 En cada partido hay un favorito, el equipo al que las casas le dan más chances, y un underdog, el no favorito. Usamos 17.959 partidos
 de 9 ligas europeas, entre 2008 y 2016, y predecimos si gana el underdog, sí o no, con las cuotas y el rating FIFA de los once titulares.
 
-> **En pantalla:** 0 · El problema, las tres cuotas del partido.
+> **En pantalla:** 0 · El contexto, las tres cuotas del partido.
 
 Un partido tiene tres resultados: gana el local, empatan o gana el visitante. Antes del partido, las casas de apuestas publican una
 cuota para cada uno: cuánto devuelven por cada peso apostado.
@@ -50,11 +50,10 @@ Las tres suman 101,9%, no 100%. Ese 1,9% que sobra es el margen de la casa. Un e
 tendríamos que apostar $70,90 a Leverkusen, $19,30 al empate y $11,70 a Frankfurt: $101,90 en total para cobrar $100. Perdemos $1,90
 seguro. Por eso apostar a ciegas pierde en el largo plazo.
 
-> **En pantalla:** las cuatro tarjetas de definiciones (los números grandes).
+> **En pantalla:** las dos tarjetas de definiciones.
 
 Quitando el margen, el favorito es el equipo con más probabilidad de ganar. Sólo usamos partidos donde favorito y underdog se separan
-por más de 5 puntos, porque por debajo dos casas de apuestas pueden elegir distinto favorito. Una fila es un partido. El underdog ganó
-3.654 de los 17.959: el 20%. Esa es la tasa base, el piso que cualquier modelo tiene que superar.
+por más de 5 puntos, porque por debajo dos casas de apuestas pueden elegir distinto favorito.
 
 <p class="pase">Pase: «Antes de construir un modelo, miramos qué dicen los datos.»</p>
 
@@ -64,7 +63,12 @@ por más de 5 puntos, porque por debajo dos casas de apuestas pueden elegir dist
 
 <p class="meta">2:30 – 5:00 · Secciones: 1 · Los datos y 2 · Lo que encontramos</p>
 
-> **En pantalla:** 1 · Los datos, el gráfico de barras.
+> **En pantalla:** 1 · Los datos, las dos tarjetas de arriba.
+
+Cada fila de nuestros datos es un partido: son 17.959. Lo que queremos predecir es si gana el underdog: 1 si gana, 0 si empata o pierde.
+De esos 17.959 partidos, el underdog ganó 3.654: el 20%, unos 2 de cada 10. Ese es el promedio.
+
+> **En pantalla:** el gráfico de barras.
 
 En este gráfico agrupamos los partidos según qué tan favorito era el favorito para la cuota. La altura de cada barra es cuántos de
 cada 100 partidos ganó el underdog.
@@ -100,13 +104,14 @@ y devuelve la probabilidad de que gane el underdog. Lo entrenamos con 2008 a 201
 2.399 partidos que nunca vio.
 
 Lo comparamos con dos pisos: decir siempre 20%, que no mira nada, y la cuota sola. El AUC mide si el modelo le da más chance a los
-partidos que el underdog terminó ganando: 0,5 es tirar una moneda. El modelo da 0,660 y la cuota, 0,656. En log-loss y Brier, que miden
+partidos que el underdog terminó ganando: 0,5 es tirar una moneda. El modelo da 0,660 y la cuota, 0,656. En log-loss, que mide
 cuánto se equivocan las probabilidades, también quedan empatados, y los dos muy por encima del piso.
 
 > **En pantalla:** el gráfico de calibración.
 
-Este gráfico responde cuánto se equivoca. Partimos los partidos en diez grupos según la probabilidad que dio cada uno, y la comparamos
-con lo que pasó. Sobre la diagonal, lo que dice es lo que pasa. El modelo y la cuota siguen la diagonal, casi siempre juntos.
+Este gráfico responde si sus probabilidades son creíbles: cuando dice 30%, ¿el underdog gana 3 de cada 10? Partimos los partidos en
+diez grupos según la probabilidad que dio cada uno, y la comparamos con lo que pasó. Sobre la línea gris punteada, lo que dice es lo
+que pasa. El modelo y la cuota caen casi sobre esa línea, y casi uno encima del otro.
 
 > **En pantalla:** las dos matrices de confusión.
 

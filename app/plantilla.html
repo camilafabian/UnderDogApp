@@ -17,7 +17,7 @@
  --noche:#0f1b24;--noche2:#16303a;--aviso:#9a5b00;--avisobg:#fff4e2;
  --serif:"Fraunces",Georgia,serif;--sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
  --sombra:0 1px 2px rgba(20,30,40,.05),0 8px 24px rgba(20,30,40,.06)}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:70px}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:16px}
 body{margin:0;background:var(--bg);color:var(--tinta);font:16.5px/1.7 var(--sans)}
 a{color:var(--modelo)}
 .env{max-width:960px;margin:auto;padding:0 20px}
@@ -25,14 +25,37 @@ a{color:var(--modelo)}
 
 /* navegación */
 #progreso{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--modelo),var(--gano));width:0;z-index:20}
-nav{position:sticky;top:0;z-index:10;background:rgba(15,27,36,.92);backdrop-filter:blur(8px);color:#cfd8de}
-nav .env{display:flex;align-items:center;gap:4px;height:56px;overflow-x:auto;scrollbar-width:none}
-nav .marca{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;margin-right:auto;white-space:nowrap;text-decoration:none;padding-right:10px}
-nav .marca i{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--modelo),var(--gano));display:grid;place-items:center;font-style:normal;font-size:.8rem}
-nav a.sec{color:#aab6bf;text-decoration:none;font-size:.85rem;padding:6px 10px;border-radius:99px;white-space:nowrap;transition:.2s}
-nav a.sec:hover{color:#fff;background:rgba(255,255,255,.08)}
-nav a.sec.activa{color:#fff;background:rgba(15,127,115,.38)}
-nav a.sec b{font-weight:600;opacity:.6;margin-right:4px}
+/* índice flotante a la izquierda, siempre abierto, como el de Google Docs: una línea vertical con un círculo por sección.
+   Entra en el margen izquierdo cuando la pantalla es ancha; en pantallas más angostas se abre con un botón.
+   Sobre la portada (fondo oscuro) cambia a colores claros. */
+#indice{position:fixed;left:16px;top:50%;transform:translateY(-50%);z-index:15;width:min(232px, calc((100vw - 960px) / 2 - 30px));
+ padding:14px 14px 12px;border-radius:16px;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+ border:1px solid rgba(20,30,40,.07);box-shadow:0 6px 24px rgba(20,30,40,.07);transition:background .3s,border-color .3s}
+#indice .titulo-indice{display:block;font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9aa1aa;margin:0 0 8px 2px}
+#indice .lista{position:relative;display:flex;flex-direction:column;gap:2px}
+#indice .lista::before{content:"";position:absolute;left:10px;top:12px;bottom:12px;width:2px;border-radius:2px;background:#e3e6ea}
+#indice a{position:relative;display:grid;grid-template-columns:22px 1fr;align-items:center;gap:10px;text-decoration:none;color:var(--suave);
+ font-size:.8rem;line-height:1.25;padding:5px 6px 5px 0;border-radius:8px;transition:color .2s}
+#indice a i{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#fff;border:1.5px solid #d3d8dd;
+ font-style:normal;font-size:.66rem;font-weight:700;color:#8a929c;transition:.2s}
+#indice a:hover{color:var(--modelo)}
+#indice a:hover i{border-color:var(--modelo);color:var(--modelo)}
+#indice a.activa{color:var(--tinta);font-weight:700}
+#indice a.activa i{background:var(--modelo);border-color:var(--modelo);color:#fff;box-shadow:0 0 0 4px rgba(15,127,115,.15)}
+#indice.oscuro{background:rgba(15,27,36,.5);border-color:rgba(255,255,255,.1);box-shadow:none}
+#indice.oscuro .titulo-indice{color:#7f9099}
+#indice.oscuro .lista::before{background:rgba(255,255,255,.14)}
+#indice.oscuro a{color:#b3c0c7}
+#indice.oscuro a i{background:transparent;border-color:rgba(255,255,255,.28);color:#b3c0c7}
+#indice.oscuro a:hover,#indice.oscuro a.activa{color:#fff}
+#indice.oscuro a.activa i{background:#7fd3c6;border-color:#7fd3c6;color:var(--noche);box-shadow:0 0 0 4px rgba(127,211,198,.18)}
+#abrir-indice{display:none}
+@media (max-width:1279px){
+ #indice{top:auto;bottom:74px;transform:none;display:none;left:auto;right:14px;width:236px;background:rgba(255,255,255,.96)}
+ #indice.abierto{display:block}
+ #abrir-indice{display:grid;place-items:center;position:fixed;right:14px;bottom:16px;z-index:16;width:48px;height:48px;border-radius:50%;border:0;
+  background:var(--noche);color:#fff;font-size:1.3rem;box-shadow:0 4px 14px rgba(0,0,0,.25);cursor:pointer}
+}
 
 /* portada */
 header{background:radial-gradient(1200px 500px at 85% -10%,#1d4a52 0%,transparent 60%),linear-gradient(180deg,var(--noche),var(--noche2));color:#e9eef1;padding:28px 0 32px}
@@ -57,7 +80,7 @@ h1{font-family:var(--serif);font-size:clamp(2.1rem,4.6vw,3.1rem);line-height:1.0
 .ficha-proyecto .def-fav,.ficha-proyecto .def-und{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28)}
 .ficha-proyecto .def-und b{color:#8fb8ea}
 /* la portada ocupa justo una pantalla (menos la barra de arriba), con el contenido centrado */
-header{min-height:calc(100vh - 56px);display:flex;align-items:center}
+header{min-height:100vh;display:flex;align-items:center}
 header>.env{width:100%}
 .ficha-proyecto div{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 16px;font-size:.88rem;line-height:1.45;color:#a9b7bf}
 .ficha-proyecto small{display:block;text-transform:uppercase;letter-spacing:.1em;font-size:.68rem;font-weight:600;color:#7fd3c6;margin-bottom:4px}
@@ -122,7 +145,11 @@ code{font-size:.84em;background:#f0eee8;padding:1px 6px;border-radius:5px}
 .resultado.und .pasos .prob b{color:var(--gano)}
 .resultado .cuenta{font-size:.8rem;color:var(--suave);margin:8px 0 0;line-height:1.45}
 .clave-cuota{font-size:.92rem;color:var(--suave);margin:4px 0 0}
-.defs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:14px;margin:26px 0}
+.defs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:14px;margin:26px 0}
+.dato-base{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 14px;background:var(--papel);border:1px solid var(--linea);border-left:4px solid var(--gano);
+ border-radius:14px;padding:12px 18px;margin:18px 0 0;color:var(--suave);font-size:.92rem}
+.dato-base .grande{font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--tinta)}
+.dato-base .grande small{font-family:var(--sans);font-size:.9rem;font-weight:700;color:var(--gano);margin-left:6px}
 .def{background:var(--papel);border:1px solid var(--linea);border-radius:14px;padding:14px 18px 14px;font-size:.88rem;color:var(--suave);display:flex;flex-direction:column;gap:6px}
 .def h4{margin:0;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--suave)}
 .def .grande{font-family:var(--serif);font-size:1.75rem;line-height:1.15;color:var(--tinta);font-weight:700}
@@ -134,6 +161,16 @@ code{font-size:.84em;background:#f0eee8;padding:1px 6px;border-radius:5px}
 .def .chips-si-no span{border-radius:99px;padding:3px 12px;font-weight:600;font-size:.85rem}
 .def .si{background:var(--gano-claro);color:var(--gano)}.def .no{background:#eceef1;color:#4a5563}
 .def .ok{color:var(--modelo);font-weight:700}
+.puente{background:var(--gano-claro);border-left:4px solid var(--gano);border-radius:14px;padding:16px 20px;margin:20px 0 16px}
+.puente-intro{margin:0 0 10px;color:var(--tinta)}
+.puente-nums{display:flex;align-items:center;justify-content:center;gap:24px;margin:6px 0}
+.puente-nums>div{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;width:200px}
+.puente-nums b{font-family:var(--serif);font-size:2.1rem;line-height:1;color:var(--gano)}
+.puente-nums span{color:var(--tinta);font-size:.9rem;line-height:1.35}
+.puente-flecha{width:64px;height:16px;flex:none;fill:none;stroke:var(--gano);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;margin-bottom:22px}
+.puente-cierre{margin:10px 0 0;font-weight:600;color:var(--tinta)}
+@media (max-width:560px){.puente-nums{flex-direction:column;gap:10px}.puente-flecha{transform:rotate(90deg);margin:0}.puente-nums b{font-size:1.8rem}}
+.def .decision{display:inline-block;vertical-align:middle;margin-left:6px;border-radius:99px;padding:2px 9px;font-size:.7rem;font-weight:700;letter-spacing:.02em;text-transform:uppercase;background:var(--gano);color:#fff}
 .pregunta{background:var(--noche);color:#e9eef1;border-radius:18px;padding:22px 24px;margin:28px 0 8px}
 .pregunta b{color:#fff}.pregunta .grande{font-family:var(--serif);font-size:1.35rem;line-height:1.35;color:#fff;margin:0 0 10px}
 .pregunta ol{margin:6px 0 0;padding-left:20px}.pregunta li{margin:4px 0}
@@ -222,6 +259,28 @@ code{font-size:.84em;background:#f0eee8;padding:1px 6px;border-radius:5px}
 #g_explorar .vega-embed>svg,#g_explorar .vega-embed>canvas{align-self:center;max-width:100%}
 .panel{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 @media (max-width:760px){.panel{grid-template-columns:1fr}}
+/* Probá: inputs a la izquierda (scroll normal), resultado fijo a la derecha mientras se recorren los deslizadores */
+.probar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.probar-inputs{display:grid;gap:20px}
+.probar-salida{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;border-radius:18px}
+.probar-salida .aviso{margin:0 0 12px}
+.probar-salida .veredicto{margin:0}
+.probar-salida .veredicto .decision{grid-template-columns:1fr;gap:10px}
+.probar-salida .veredicto .grande{font-size:1.75rem}
+.probar-salida .veredicto .plata{min-width:0;display:flex;align-items:baseline;gap:10px;text-align:left;padding:10px 14px;flex-wrap:wrap}
+.probar-salida .veredicto .plata .num{font-size:1.7rem}
+.probar-salida .veredicto .barra{grid-template-columns:118px 1fr 48px;font-size:.82rem}
+.probar-salida .veredicto .pie{font-size:.78rem}
+.mini-veredicto{display:none}
+@media (max-width:860px){
+ .probar{grid-template-columns:1fr}
+ .probar-salida{position:static;max-height:none;overflow:visible}
+ .mini-veredicto{position:fixed;left:12px;right:12px;bottom:12px;z-index:30;background:var(--noche);color:#e9eef1;border-radius:14px;padding:10px 14px;
+   box-shadow:0 6px 24px rgba(0,0,0,.25);font-size:.88rem;line-height:1.35;border:2px solid transparent}
+ .mini-veredicto.v-si{border-color:#2fb5a3}.mini-veredicto.v-no{border-color:#e0a03a}
+ .mini-veredicto.visible{display:block}
+ .mini-veredicto b.si{color:#7fe0d0}.mini-veredicto b.no{color:#ffc46b}
+}
 .caja{background:var(--papel);border:1px solid var(--linea);border-radius:18px;padding:18px 20px;box-shadow:var(--sombra)}
 .caja h3{margin:0 0 4px;font-size:1rem}.caja p.nota{margin:0 0 12px;font-size:.84rem;color:var(--suave)}
 .cuotas{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -270,17 +329,25 @@ footer b{color:#fff}
 </head>
 <body>
 <div id="progreso"></div>
-<nav><div class="env">
- <a class="marca" href="#arriba"><i>U</i>¿Gana el underdog?</a>
- <a class="sec" href="#problema"><b>0</b>El problema</a><a class="sec" href="#datos"><b>1</b>Los datos</a><a class="sec" href="#hallazgo"><b>2</b>Lo que encontramos</a>
- <a class="sec" href="#predice"><b>3</b>¿Predice?</a><a class="sec" href="#apostar"><b>4</b>¿Sirve para apostar?</a>
- <a class="sec" href="#explora"><b>5</b>Explorá</a><a class="sec" href="#proba"><b>6</b>Probá el modelo</a>
-</div></nav>
+<nav id="indice" aria-label="Secciones">
+ <span class="titulo-indice">En esta página</span>
+ <div class="lista">
+  <a href="#arriba"><i>↑</i><span>Inicio</span></a>
+  <a href="#problema"><i>0</i><span>El contexto</span></a>
+  <a href="#datos"><i>1</i><span>Los datos</span></a>
+  <a href="#hallazgo"><i>2</i><span>Lo que encontramos</span></a>
+  <a href="#predice"><i>3</i><span>¿El modelo predice?</span></a>
+  <a href="#apostar"><i>4</i><span>¿Sirve para apostar?</span></a>
+  <a href="#explora"><i>5</i><span>Explorá</span></a>
+  <a href="#proba"><i>6</i><span>Probá el modelo</span></a>
+ </div>
+</nav>
+<button id="abrir-indice" type="button" aria-label="Ver secciones" aria-controls="indice">☰</button>
 
 <header id="arriba"><div class="env">
  <div class="kicker">Proyecto integrador · Ciencia de Datos · UTN FRM · 5K10</div>
  <h1>¿Ganará el no favorito el próximo partido de fútbol?</h1>
- <p class="autores">Matias&nbsp;Almendros · Juan&nbsp;Caballero · Camila&nbsp;Fabian · Ignacio&nbsp;Fernandez · Ignacio&nbsp;Miqueleiz · Matias&nbsp;Roiz</p>
+ <p class="autores">Matias&nbsp;Almendros · Juan&nbsp;Caballero · Camila&nbsp;Fabian · Ignacio&nbsp;Fernandez · Matias&nbsp;Mann · Ignacio&nbsp;Miqueleiz · Matias&nbsp;Roiz</p>
  <p class="tesis">17 de abril de 2016: el Barcelona pierde 1–2 en su cancha contra el Valencia. Las casas de apuestas le daban al Valencia un 6% de chances.
  ¿Se puede ver venir una sorpresa así antes del partido?</p>
  <div class="dos-preguntas">
@@ -298,7 +365,7 @@ footer b{color:#fff}
 
 <!-- TALLO 0 · EL PROBLEMA -->
 <section id="problema"><div class="env">
- <div class="etiqueta"><i>0</i>El problema</div>
+ <div class="etiqueta"><i>0</i>El contexto</div>
  <h2>Cada partido tiene un favorito y un underdog, y la cuota dice cuánto paga cada uno</h2>
  <div class="texto"><p class="lead">Trabajamos con partidos de fútbol de 9 ligas europeas. Un partido tiene tres resultados posibles: gana el local, empatan o gana el visitante.
  Antes del partido, las casas de apuestas publican una <b>cuota</b> para cada uno: cuánto te devuelven por cada peso si ese resultado sale. Un ejemplo real,
@@ -323,34 +390,42 @@ footer b{color:#fff}
    <div class="fila"><b>{{EJ_PN_LOCAL}}</b><span><strong>Favorito:</strong> {{EJ_LOCAL}}</span></div>
    <div class="fila und"><b>{{EJ_PN_VISIT}}</b><span><strong>Underdog:</strong> {{EJ_VISIT}}</span></div>
    <span>Probabilidades sin el margen de la casa. El empate no es un equipo.</span></div>
-  <div class="def"><h4>Un underdog claro</h4>
+  <div class="def"><h4>Un underdog claro <span class="decision">decisión nuestra</span></h4>
    <div class="grande">más de 5 puntos<small>de diferencia</small></div>
    <span>Acá: {{EJ_PN_LOCAL}} − {{EJ_PN_VISIT}} = {{EJ_GAP}} puntos <span class="ok">✓</span></span>
-   <span>Con menos, dos casas de apuestas eligen distinto favorito en el 54% de los partidos.</span></div>
-  <div class="def"><h4>Qué es una fila y qué predecimos</h4>
-   <div class="grande">1 fila = 1 partido<small>{{N}} en total</small></div>
-   <span>¿Gana el underdog?</span>
-   <div class="chips-si-no"><span class="si">Sí → 1</span><span class="no">Empata o pierde → 0</span></div></div>
-  <div class="def"><h4>De dónde sale el 20%</h4>
-   <div class="grande">{{GANADOS}} de {{N}}<small>= {{TASA}}</small></div>
-   <span>Unos 2 de cada 10 partidos los gana el underdog. Decir siempre «20%» es el piso que cualquier modelo tiene que superar.</span></div>
+   <span><strong>Decidimos dejar afuera</strong> los partidos con 5 puntos o menos: ahí quién es el underdog depende de la casa de apuestas.
+   En los más parejos, dos casas eligen distinto favorito en la mitad de los partidos.</span></div>
  </div>
  <div class="pregunta"><p class="grande">¿Podemos saber, antes del partido, cuándo el underdog tiene más chances de las que paga la cuota?</p>
-  Lo respondemos en dos etapas, en este orden:
-  <ol><li><b>Etapa 1 · ¿el modelo predice?</b> Si acierta quién gana, sin hablar de plata (secciones <a href="#datos">1</a> a <a href="#predice">3</a>).</li>
-  <li><b>Etapa 2 · ¿sirve para apostar?</b> Si, con una regla de apuesta, le gana a apostar a ciegas y a estrategias simples (sección <a href="#apostar">4</a>).</li></ol></div>
+  Primero vemos qué dicen los datos y si se puede predecir quién gana. Después, si eso alcanza para ganarle a la casa de apuestas.</div>
 </div></section>
 
 <!-- TALLO 1 · LOS DATOS -->
 <section id="datos"><div class="env">
  <div class="etiqueta"><i>1</i>Los datos <span class="etapa e1">Etapa 1 · predecir</span></div>
- <h2>Cuanto más claro es el favorito, menos gana el underdog: del {{DATOS_ALTO}} de los partidos parejos al {{DATOS_BAJO}} cuando el favorito es abrumador</h2>
- <div class="texto"><p class="lead">Cada partido tiene un favorito y un underdog según las cuotas de las casas de apuestas. La cuota se traduce en una probabilidad,
- y esa probabilidad acierta: los underdogs ganan mucho más seguido cuando el partido es parejo que cuando enfrentan a un gigante. En promedio ganan
- {{DE_CADA_10}} de cada 10, pero ese promedio esconde partidos muy distintos.</p></div>
+ <h2>El underdog gana {{DE_CADA_10}} de cada 10 partidos, pero depende mucho de qué tan claro sea el favorito</h2>
+ <div class="texto"><p class="lead">Juntamos {{N}} partidos con sus cuotas y nos fijamos en una sola cosa: si ganó el underdog.</p></div>
+ <div class="defs">
+  <div class="def"><h4>Qué es una fila y qué predecimos</h4>
+   <div class="grande">1 fila = 1 partido<small>{{N}} en total</small></div>
+   <span>¿Gana el underdog?</span>
+   <div class="chips-si-no"><span class="si">Sí → 1</span><span class="no">Empata o pierde → 0</span></div></div>
+  <div class="def"><h4>Cuántas veces gana</h4>
+   <div class="grande">{{GANADOS}} de {{N}}<small>= {{TASA}}</small></div>
+   <span>partidos los ganó el underdog: en promedio, {{DE_CADA_10}} de cada 10.</span></div>
+ </div>
+ <div class="puente">
+  <p class="puente-intro">Pero ese {{TASA}} es un promedio de partidos muy distintos. Si los separamos según qué tan favorito era el favorito:</p>
+  <div class="puente-nums">
+   <div><b>{{DATOS_ALTO}}</b><span>gana el underdog en los partidos <strong>parejos</strong></span></div>
+   <svg class="puente-flecha" viewBox="0 0 64 16" aria-hidden="true"><line x1="2" y1="8" x2="58" y2="8"/><polyline points="51,2 59,8 51,14"/></svg>
+   <div><b>{{DATOS_BAJO}}</b><span>cuando enfrenta a un <strong>gigante</strong></span></div>
+  </div>
+  <p class="puente-cierre">O sea, la cuota acierta: cuando dice que el underdog tiene pocas chances, de verdad gana poco.</p>
+ </div>
  <div class="grafico"><div id="g_datos"></div></div>
  <p class="como-leer">Cada barra agrupa los partidos según la probabilidad que la cuota le daba al favorito (debajo, cuántos partidos tiene); su altura es cuántos de cada 100 terminó
- ganando el underdog. La línea punteada es el promedio de todos los partidos.</p>
+ ganando el underdog. La línea punteada es el promedio de todos los partidos ({{TASA}}).</p>
  <details><summary>Cómo lo sabemos <small>pipeline, filtros, fuga</small></summary><div>
   <h3>De dónde salen los datos</h3>
   <p>De la <a href="https://www.kaggle.com/datasets/hugomathien/soccer">European Soccer Database</a> (Kaggle): partidos con
@@ -385,7 +460,7 @@ footer b{color:#fff}
   visitante es mucho menor en esos partidos (separación estandarizada 1,43, verde en el semáforo de la cátedra). Se sostuvo, y de ahí
   sale el umbral de 0,05 que define quién es el underdog.</p>
   <h3>Una que no</h3>
-  <p><b>H2 · el rating del XI es mayor cuando gana el underdog.</b> Mirado solo, sí (separación 0,36, amarillo). Pero el rating del XI
+  <p><b>H2 · el rating de los 11 es mayor cuando gana el underdog.</b> Mirado solo, sí (separación 0,36, amarillo). Pero el rating de los 11
   correlaciona 0,66 con la probabilidad del mercado; al controlar por la cuota, la separación cae a 0,03–0,16 (rojo). <b>Refutada:</b>
   el rating de los titulares no agrega información que la cuota no tenga. Es lo que muestra el gráfico.</p>
   <h3>Cómo se construyó el gráfico</h3>
@@ -397,18 +472,19 @@ footer b{color:#fff}
 <!-- TALLO 3 · ¿EL MODELO PREDICE? (ETAPA 1) -->
 <section id="predice"><div class="env">
  <div class="etiqueta"><i>3</i>¿El modelo predice? <span class="etapa e1">Etapa 1 · predecir, sin hablar de plata</span></div>
- <h2>El modelo predice tan bien como la cuota, y no mejor: en la temporada que nunca vio, AUC {{AUC_TEST}} contra {{AUC_MERCADO}}</h2>
+ <h2>El modelo predice igual que la cuota: los dos aciertan bastante más que tirar una moneda, pero ninguno le gana al otro</h2>
  <div class="texto"><p class="lead">El modelo es una regresión logística: una fórmula que toma la probabilidad de la cuota y diez diferencias de rating entre los titulares
  (12 columnas en total) y devuelve la probabilidad de que gane el underdog. Lo entrenamos con 2008–2015 y lo probamos una sola vez en la temporada 2015/16
  ({{N_TEST}} partidos que nunca vio). Para saber si acierta lo comparamos con dos pisos: decir siempre {{TASA_BASE}} (la tasa base, no mira nada) y la cuota sola.</p></div>
  <div class="tbl tabla-grande">{{T_METRICAS}}</div>
  <p class="como-leer">AUC: si tomás un partido que ganó el underdog y otro que no, qué tan seguido el modelo le dio más chance al primero (0,5 = tirar una moneda; 1 = siempre).
- Log-loss y Brier: cuánto se alejan, en promedio, las probabilidades de lo que pasó (menos es mejor). En las tres, el modelo y la cuota quedan prácticamente empatados y los dos muy por encima del piso.</p>
+ Log-loss: cuánto se alejan, en promedio, las probabilidades de lo que pasó (menos es mejor). En las dos, el modelo y la cuota quedan prácticamente empatados y los dos muy por encima del piso.</p>
 
- <h3 class="sub">Cuánto se equivoca: cuando dice 30%, ¿gana 3 de cada 10?</h3>
+ <h3 class="sub">¿Sus probabilidades son creíbles? Cuando dice 30%, ¿el underdog gana 3 de cada 10?</h3>
  <div class="grafico"><div id="g_calibracion"></div></div>
- <p class="como-leer">Partimos los partidos del test en diez grupos de igual tamaño según la probabilidad que dio cada uno. Cada punto compara la probabilidad promedio del
- grupo con la proporción que ganó de verdad. Sobre la diagonal, lo que dice es lo que pasa. El modelo y la cuota siguen la diagonal de cerca, y casi siempre juntos.</p>
+ <p class="como-leer">Cada punto es un grupo de partidos del test a los que se les dio una probabilidad parecida (diez grupos del mismo tamaño).
+ Si el punto cae sobre la línea gris punteada, la probabilidad fue justa: a los partidos que se les dio 30%, el underdog ganó 3 de cada 10.
+ Arriba de la línea, el underdog ganó más de lo que se dijo; abajo, menos. El modelo y la cuota caen casi sobre la línea, y casi uno encima del otro.</p>
 
  <h3 class="sub">Si tuviera que decir sí o no: la matriz de confusión</h3>
  <div class="texto"><p>Para contar aciertos y errores hay que elegir un corte: el modelo «dice que gana» si le da al underdog {{UMBRAL_MATRIZ}} o más, la tasa base.
@@ -438,7 +514,7 @@ footer b{color:#fff}
   <h3>Qué aporta cada grupo de columnas (AUC)</h3>
   {{T_GRUPOS}}
   <h3>El modelo elegido y su ajuste</h3>
-  <p>Regresión logística con las 12 columnas (las 2 probabilidades del mercado en escala logit y 10 diferencias de rating del XI),
+  <p>Regresión logística con las 12 columnas (las 2 probabilidades del mercado en escala logit y 10 diferencias de rating de los 11),
   C = {{C}} (elegido por grilla; desde C = 0,1 la AUC ya no cambia). Es una fórmula, así que esta página la calcula en tu navegador.</p>
   <h3>Resultado en el test (temporada 2015/16, mirada una vez)</h3>
   {{T_TEST}}
@@ -517,17 +593,14 @@ footer b{color:#fff}
 <!-- COPA 1 · EXPLORÁ -->
 <section id="explora" class="copa"><div class="env">
  <div class="etiqueta"><i>5</i>Explorá</div>
- <h2>Los {{N_EXPLORAR}} partidos que el modelo predijo sin haberlos visto, y qué habría hecho en cada uno</h2>
+ <h2>Los {{N_EXPLORAR}} partidos, y qué habría hecho el modelo en cada uno</h2>
  <div class="texto"><p class="lead">Cada punto es un partido. Los grises son los que el modelo dejó pasar; los de color, sus apuestas: azul si el underdog ganó,
  gris oscuro si perdió. Elegí una liga o una temporada, o <b>arrastrá un rectángulo</b> sobre una zona: las barras de abajo recalculan cuánto habría ganado
  el modelo y cada estrategia simple de la sección 4. <b>Hacé clic en un partido</b> para ver su ficha.</p></div>
  <div class="grafico"><div id="g_explorar"></div></div>
  <div class="tarjeta" id="ficha"></div>
- <p class="como-leer">De 2010 a 2015, cada partido lo predice un modelo entrenado únicamente con los anteriores; los de 2015/16, el modelo final, que nunca los vio. Doble clic borra el rectángulo.</p>
- <div class="cambio"><b>Una decisión de diseño que cambiamos.</b> La primera versión de este panel mostraba los 17.959 partidos con lo que
- decía el modelo final, y las barras daban que el modelo ganaba +4,6%. Ese número era optimista: el modelo final había entrenado con
- la mayoría de esos partidos. Ahora sólo están los partidos que cada modelo predijo sin haberlos visto, y el número honesto es mucho más chico.
- También sacamos del eje vertical la probabilidad del modelo (que casi copiaba a la de la cuota y dejaba todo sobre una diagonal) y pusimos el valor esperado, que es lo que decide.</div>
+ <p class="como-leer">De 2010 a 2015, cada partido lo predice un modelo entrenado únicamente con los anteriores; los de 2015/16, el modelo final, que nunca los vio.
+ Faltan los de 2008–2010: sólo sirvieron para entrenar. Doble clic borra el rectángulo.</p>
 </div></section>
 
 <!-- COPA 2 · PROBÁ EL MODELO -->
@@ -543,7 +616,8 @@ footer b{color:#fff}
  </div>
  <p class="nota-chips">Empezá con un partido real de la temporada de test (o armá el tuyo abajo):</p>
  <div class="chips" id="chips"></div>
- <div class="panel">
+ <div class="probar">
+ <div class="probar-inputs">
   <div class="caja">
    <h3>El partido</h3><p class="nota">Los equipos (sólo para mostrarlos: el modelo no usa los nombres) y las cuotas, como las muestra cualquier casa de apuestas.</p>
    <div class="nombres">
@@ -559,17 +633,21 @@ footer b{color:#fff}
   </div>
   <div class="caja">
    <h3>Los once titulares</h3><p class="nota">Rating FIFA: underdog menos favorito. A la izquierda, el favorito tiene mejores jugadores.</p>
-   <label class="juntos"><input type="checkbox" id="juntos" checked> Mover juntos el rating medio, los 3 mejores y el mejor jugador: al tocar uno, los ratings de nivel se acomodan como en partidos reales. Defensa, medio y ataque se mueven por separado, y el rating medio del XI siempre acompaña a esas tres líneas.</label>
+   <label class="juntos"><input type="checkbox" id="juntos" checked> Mover juntos el rating medio, los 3 mejores y el mejor jugador: al tocar uno, los ratings de nivel se acomodan como en partidos reales. Defensa, medio y ataque se mueven por separado, y el rating medio de los 11 siempre acompaña a esas tres líneas.</label>
    <div id="gaps"></div>
   </div>
  </div>
- <div class="aviso" id="aviso"></div>
- <div class="veredicto" id="veredicto"></div>
+ <div class="probar-salida">
+  <div class="aviso" id="aviso"></div>
+  <div class="veredicto" id="veredicto"></div>
+ </div>
+ </div>
+ <div class="mini-veredicto" id="mini" aria-hidden="true"></div>
 </div></section>
 
 <footer><div class="env">
  <b>¿Gana el underdog?</b> · Proyecto integrador · Ciencia de Datos · UTN FRM · 2026.<br>
- Matias Almendros, Juan Caballero, Camila Fabian, Ignacio Fernandez, Ignacio Miqueleiz y Matias Roiz.<br>
+ Matias Almendros, Juan Caballero, Camila Fabian, Ignacio Fernandez, Matias Mann, Ignacio Miqueleiz y Matias Roiz.<br>
  Datos: European Soccer Database (Kaggle). Pipeline en Airflow sobre PostgreSQL, modelo en scikit-learn, gráficos en Altair.
  Esta página la genera <code>app/build_app.py</code> a partir de lo que producen el DAG y el notebook de modelado. Los escudos son
  marcas generadas con las iniciales de cada equipo, no los escudos oficiales.
@@ -686,7 +764,7 @@ function ficha(d) {
      <div>Según la cuota<b>${pct(d.prob_mercado)}</b></div>
      <div>Según el modelo<b>${pct(d.prob_modelo)}</b></div>
      <div>Valor esperado<b>${d.valor > 0 ? "+" : ""}${pct(d.valor)}</b></div>
-     <div>Dif. rating del XI<b>${d.gap_xi > 0 ? "+" : ""}${coma(d.gap_xi, 1)}</b></div>
+     <div>Dif. rating de los 11<b>${d.gap_xi > 0 ? "+" : ""}${coma(d.gap_xi, 1)}</b></div>
      <div>Si apostaba $100<b>${d.apuesta ? (d.ganancia >= 0 ? "+$" : "−$") + coma(Math.abs(d.ganancia), 0) : "—"}</b></div>
    </div>`;
   const el = document.getElementById("ficha"); el.classList.remove("visible"); void el.offsetWidth; el.classList.add("visible");
@@ -800,11 +878,20 @@ document.querySelectorAll("#proba input:not([type=text]):not([type=checkbox])").
 }));
 document.querySelectorAll("#n_local, #n_visit").forEach(el => el.addEventListener("input", () => calcular()));
 
+// celular: barrita fija con el resultado mientras estás entre los deslizadores (se oculta cuando el veredicto completo está a la vista)
+if ("IntersectionObserver" in window) {
+  let enInputs = false, veredictoVisible = false;
+  const mini = document.getElementById("mini");
+  const actualizar = () => mini.classList.toggle("visible", enInputs && !veredictoVisible && mini.innerHTML.trim() !== "");
+  new IntersectionObserver(([e]) => { enInputs = e.isIntersecting; actualizar(); }).observe(document.querySelector(".probar-inputs"));
+  new IntersectionObserver(([e]) => { veredictoVisible = e.isIntersecting; actualizar(); }, {threshold: 0.3}).observe(document.getElementById("veredicto"));
+}
+
 function calcular() {
   const cuotas = ["c_local", "c_empate", "c_visit"].map(id => parseFloat(document.getElementById(id).value));
   const avisos = [];
   const aviso = document.getElementById("aviso"), veredicto = document.getElementById("veredicto");
-  if (cuotas.some(c => !(c > 1))) { aviso.style.display = "block"; aviso.textContent = "Las tres cuotas tienen que ser mayores que 1."; veredicto.innerHTML = ""; return; }
+  if (cuotas.some(c => !(c > 1))) { aviso.style.display = "block"; aviso.textContent = "Las tres cuotas tienen que ser mayores que 1."; veredicto.innerHTML = ""; const mi = document.getElementById("mini"); mi.innerHTML = ""; mi.classList.remove("visible"); return; }
   const inv = cuotas.map(c => 1 / c), suma = inv[0] + inv[1] + inv[2];
   const [pLocal, pEmpate, pVisit] = inv.map(x => x / suma);
   const localFavorito = pLocal > pVisit;
@@ -838,6 +925,10 @@ function calcular() {
   const nombreVisit = document.getElementById("n_visit").value.trim() || "Visitante";
   const fav = localFavorito ? nombreLocal : nombreVisit, und = localFavorito ? nombreVisit : nombreLocal;
   const si = valor > 0, por100 = valor * 100, m = Math.max(pUnderdog, p, 0.01) * 1.25;
+  const mini = document.getElementById("mini");
+  mini.className = "mini-veredicto " + (si ? "v-si" : "v-no") + (mini.classList.contains("visible") ? " visible" : "");
+  mini.innerHTML = `<b class="${si ? "si" : "no"}">${si ? "Apostaría al underdog" : "No apostaría"}</b> · modelo ${pct(p)} vs cuota ${pct(pUnderdog)}
+    · ${por100 >= 0 ? "+" : "−"}$${coma(Math.abs(por100), 0)} por cada $100`;
   const ancho = x => Math.min(100, 100 * x / m).toFixed(1) + "%";
   const color = si ? "#2fb5a3" : "#e0a03a";
   veredicto.className = "veredicto " + (si ? "v-si" : "v-no");
@@ -873,20 +964,22 @@ if (!matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObse
   objetivos.forEach(el => { el.classList.add("rev"); rev.observe(el); });
 }
 
-// --- navegación: barra de progreso y sección activa
-const enlaces = [...document.querySelectorAll("nav a.sec")];
+// --- navegación: barra de progreso y sección activa en el índice flotante
+const enlaces = [...document.querySelectorAll("#indice a")];
+const indice = document.getElementById("indice");
 addEventListener("scroll", () => {
   const h = document.documentElement;
   document.getElementById("progreso").style.width = (100 * h.scrollTop / (h.scrollHeight - h.clientHeight)) + "%";
 }, {passive: true});
 const observador = new IntersectionObserver(es => es.forEach(e => {
-  if (e.isIntersecting) enlaces.forEach(a => {
-    const activa = a.getAttribute("href") === "#" + e.target.id;
-    a.classList.toggle("activa", activa);
-    if (activa) { const c = a.parentElement; c.scrollLeft = a.offsetLeft - (c.clientWidth - a.clientWidth) / 2; }   // en el celular, la sección activa queda a la vista
-  });
+  if (e.isIntersecting) enlaces.forEach(a => a.classList.toggle("activa", a.getAttribute("href") === "#" + e.target.id));
 }), {rootMargin: "-45% 0px -50% 0px"});
-document.querySelectorAll("section").forEach(s => observador.observe(s));
+document.querySelectorAll("header, section").forEach(s => observador.observe(s));
+new IntersectionObserver(es => es.forEach(e => indice.classList.toggle("oscuro", e.isIntersecting && innerWidth >= 1280)),
+  {rootMargin: "-50% 0px -50% 0px"}).observe(document.querySelector("header"));
+// en el celular el índice se abre con el botón y se cierra al elegir una sección
+document.getElementById("abrir-indice").addEventListener("click", () => indice.classList.toggle("abierto"));
+enlaces.forEach(a => a.addEventListener("click", () => indice.classList.remove("abierto")));
 </script>
 </body>
 </html>
