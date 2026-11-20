@@ -247,7 +247,7 @@ footer b{color:#fff}
 <nav><div class="env">
  <a class="marca" href="#arriba"><i>U</i>¿Gana el underdog?</a>
  <a class="sec" href="#problema"><b>0</b>El problema</a><a class="sec" href="#datos"><b>1</b>Los datos</a><a class="sec" href="#hallazgo"><b>2</b>Lo que encontramos</a>
- <a class="sec" href="#predice"><b>3</b>¿Predice?</a><a class="sec" href="#apostar"><b>4</b>¿Sirve para apostar?</a><a class="sec" href="#recorrido">El recorrido</a>
+ <a class="sec" href="#predice"><b>3</b>¿Predice?</a><a class="sec" href="#apostar"><b>4</b>¿Sirve para apostar?</a>
  <a class="sec" href="#explora"><b>5</b>Explorá</a><a class="sec" href="#proba"><b>6</b>Probá el modelo</a>
 </div></nav>
 
@@ -432,33 +432,28 @@ footer b{color:#fff}
  <p class="como-leer">Cada punto es un partido del test. Horizontal: la probabilidad que paga la cuota (1 / cuota, con el margen de la casa). Vertical: la que le da el modelo.
  Sobre la línea punteada el modelo ve más chances de las que se pagan y apuesta ({{APUESTAS_TEST}} de {{N_TEST}}); debajo, no. Casi todos los puntos quedan debajo: es el margen de la casa.</p>
 
- <h3 class="sub">La regla es lo que evita perder el margen de la casa</h3>
- <div class="texto"><p>La regla funciona como una calibración posterior al modelo: no cambia qué tan bien predice, cambia cuándo se decide apostar. Para ver cuánto aporta,
- probamos el mismo modelo sin la regla: apostar cada vez que su probabilidad supera un umbral fijo ({{UMBRAL_SIN}}, el mejor en validación), sin mirar cuánto paga la cuota.</p></div>
- <div class="grafico"><div id="g_con_sin"></div></div>
- <p class="como-leer">Sin la regla, el modelo pierde en validación casi lo mismo que apostar a ciegas ({{SIN_VAL}} contra {{ROI_TODOS}}); con la regla, el mismo modelo queda en
- {{ROI_MODELO}}. En el test, una sola temporada que fue buena para los underdogs ({{TASA_TEST}} de victorias), a casi todo le fue mejor: con la regla {{ROI_TEST}}, sin la regla
- {{SIN_TEST}}, apostar a todos {{ROI_TODOS_TEST}}. Por eso la diferencia se mide en la validación: cinco temporadas y {{N_VAL}} partidos, contra una.</p>
-
- <h3 class="sub">¿Le gana a estrategias simples? Sólo la temporada de test</h3>
- <div class="texto"><p>Comparamos el modelo con reglas que no necesitan ningún modelo, cada una con sus parámetros elegidos mirando sólo la validación, igual que el modelo:
- apostar a todos los underdogs, apostar sólo cuando la cuota le da al underdog {{RANGO}} (el mejor rango en validación), apostar sólo cuando el once del underdog
- es mejor que el del favorito, no apostar nunca, y apostar al azar la misma cantidad de veces que el modelo ({{SORTEOS}} sorteos).</p></div>
+ <h3 class="sub">¿Le gana a estrategias simples? La plata, en la temporada de test</h3>
+ <div class="texto"><p>Comparamos el modelo con estrategias que no necesitan ningún modelo, cada una con su regla elegida mirando sólo la validación:
+ el mismo modelo <b>sin la regla</b> (apostar si le da al underdog más de {{UMBRAL_SIN}}), apostar a todos, apostar cuando la cuota le da {{RANGO}},
+ apostar cuando el once del underdog es mejor, no apostar nunca, y apostar al azar.</p></div>
  <div class="grafico"><div id="g_test"></div></div>
- <p class="como-leer">Cuánto deja cada $100 apostados, acumulado a lo largo de la temporada 2015/16. Se mide por cada $100, y no en plata total, porque las estrategias
- apuestan distinta cantidad de veces: «sin la regla» apuesta {{SIN_N_TEST}} veces y el modelo, {{APUESTAS_TEST}}. Cada línea arranca cuando su estrategia ya lleva 80 apuestas: al principio, con pocas apuestas, dos o tres resultados mueven todo.
- La banda gris es el 90% central de los sorteos al azar: una línea adentro de la banda no se distingue de la suerte.</p>
- <div class="tbl tabla-grande">{{T_ESTRATEGIAS_TEST}}</div>
+ <p class="como-leer">Ganancia acumulada a lo largo de 2015/16. Todas ponen en juego la misma plata que el modelo ($100 en cada una de sus {{APUESTAS_TEST}} apuestas) y la reparten
+ entre sus apuestas: así no gana la que más veces apuesta. La banda gris es lo que da apostar al azar: adentro de la banda, no se distingue de la suerte.</p>
+ <div class="tbl tabla-grande">{{T_RESUMEN_ESTRATEGIAS}}</div>
  <ul class="lectura">
-  <li><b>Le gana a apostar a todos y al rango de cuota</b> elegido en validación ({{RANGO_TEST}} en el test). Pero «once mejor» ({{ONCE_TEST}}) y el modelo sin la regla
-   ({{SIN_TEST}}) dan algo más en el test, y los dos perdían en validación ({{ONCE_VAL}} y {{SIN_VAL}}): sin mirar el test, no los habríamos elegido.</li>
-  <li><b>El {{ROI_TEST}} todavía no se distingue del azar:</b> apostando al azar la misma cantidad de veces, el 5% de los sorteos supera {{AZAR_P95_TEST}}, y el intervalo
-   de confianza del modelo, {{IC_TEST}}, incluye el cero. Con {{APUESTAS_TEST}} apuestas, la suerte pesa mucho.</li>
-  <li><b>Lo que sí se sostiene:</b> de las que apuestan, es la única que no pierde plata ni en validación ({{ROI_MODELO}}, {{APUESTAS_VAL}} apuestas) ni en el test ({{ROI_TEST}}).</li>
+  <li><b>La regla es lo que evita perder:</b> el mismo modelo sin la regla pierde {{SIN_VAL}} en validación, casi como apostar a ciegas ({{ROI_TODOS}}).</li>
+  <li><b>En el test hay quien gana más</b> («once mejor», el modelo sin la regla), pero perdían en validación: fue una temporada buena para los underdogs.</li>
+  <li><b>Todavía podría ser suerte:</b> el 5% de los sorteos al azar supera {{AZAR_P95_TEST}}.</li>
  </ul>
  <div class="conclusion"><small>Etapa 2, en una línea</small><b>No le ganamos a las casas de apuestas, pero dejamos de perder contra ellas.</b> Apostar a ciegas pierde el margen
  de la casa; el modelo con la regla apuesta sólo en algunos partidos ({{APUESTAS_TEST}} de {{N_TEST}} en el test) y no pierde en ningún período, aunque con estos datos su ganancia todavía podría ser suerte.</div>
  <details><summary>Cómo lo sabemos <small>todas las estrategias, umbrales, validación, por pedazo</small></summary><div>
+  <h3>El mismo modelo con y sin la regla, en los dos períodos</h3>
+  <div class="grafico"><div id="g_con_sin"></div></div>
+  <p class="como-leer">Sin la regla, el modelo pierde en validación casi lo mismo que apostar a ciegas. En el test, una temporada buena para los underdogs
+  ({{TASA_TEST}} de victorias), a casi todo le fue mejor; por eso la diferencia se mide en la validación, con cinco temporadas.</p>
+  <h3>Las estrategias en el test, con su intervalo de confianza</h3>
+  {{T_ESTRATEGIAS_TEST}}
   <h3>Todas las estrategias, en validación (2010–2015) y en el test (2015/16)</h3>
   {{T_ESTRATEGIAS_TODO}}
   <p>Para que la comparación sea justa, la regla de cada estrategia se fija con la validación y recién después se mira el test. En validación, el modelo supera al
@@ -474,37 +469,6 @@ footer b{color:#fff}
   <p><b>El intervalo de confianza del modelo incluye el cero</b>: no demuestra ganancia. Lo que sí muestra es que deja de perder el margen
   de la casa, mientras que el bosque y el boosting pierden casi lo mismo que apostar a ciegas.</p>
  </div></details>
-</div></section>
-
-<!-- EL RECORRIDO -->
-<section id="recorrido" class="recorrido"><div class="env">
- <div class="etiqueta">El recorrido</div>
- <h2>Cómo fue cambiando la respuesta, entrega por entrega</h2>
- <div class="texto"><p class="lead">En cada entrega llegamos a una conclusión distinta, y cada corrección nos obligó a hacer una pregunta mejor. Lo que no cambió desde la Entrega 2:
- la cuota ya sabe casi todo.</p></div>
- <div class="linea-tiempo">
-  <div class="hito"><small>Entrega 1 · la pregunta y los datos</small><b class="titulo">Pensábamos que los jugadores podían anticipar al underdog</b>
-   <dl><dt>Qué hicimos</dt><dd>Un dataset de 82 columnas con las cuotas, la alineación titular real y los ratings FIFA de cada jugador.</dd>
-   <dt>Qué nos marcaron</dt><dd>Usar Airflow para hablar con una base de datos (no muchos scripts sueltos) y sacar los goles, que existen recién después del partido.</dd>
-   <dt>Qué cambió</dt><dd>Un pipeline Bronze → Silver sobre PostgreSQL, sin goles ni resultados en el dataset de modelado.</dd></dl></div>
-  <div class="hito"><small>Entrega 2 · el análisis</small><b class="titulo">Descubrimos que la cuota ya sabía lo de los jugadores</b>
-   <dl><dt>Qué vimos</dt><dd>Mirado solo, un once mejor duplica las victorias del underdog. Pero al controlar por la cuota, el efecto casi desaparece: la hipótesis 2 quedó refutada (<a href="#hallazgo">sección 2</a>).</dd>
-   <dt>Qué decidimos</dt><dd>El corte de 5 puntos para tener un underdog claro y 12 columnas para el modelo. La vara a superar pasó a ser la cuota sola.</dd></dl></div>
-  <div class="hito"><small>Entrega 3 · el modelo, primera versión</small><b class="titulo">Elegimos el modelo que mejor predecía: era la cuota con otro nombre</b>
-   <dl><dt>Qué hicimos</dt><dd>Comparamos modelos sólo por AUC y ganó uno de una sola columna, la probabilidad de la cuota.</dd>
-   <dt>Qué nos marcaron</dt><dd>Ese modelo nunca tomaba una decisión distinta a la de la casa. ¿Sirve para algo, o da lo mismo que mirar las cuotas?</dd></dl></div>
-  <div class="hito"><small>Entrega 3 corregida · medir en plata</small><b class="titulo">Sumamos la pregunta económica: el modelo deja de perder</b>
-   <dl><dt>Qué hicimos</dt><dd>Simulamos apuestas con las cuotas reales. El modelo de 12 columnas, con la regla de apuesta, es el único que no pierde el margen:
-   {{ROI_TODOS}} → {{ROI_MODELO}} en validación, con un intervalo que incluye el cero.</dd></dl></div>
-  <div class="hito"><small>Entrega 4 · la aplicación</small><b class="titulo">Corregimos un número demasiado optimista</b>
-   <dl><dt>Qué pasó</dt><dd>La primera versión del Explorá daba +4,6% para el modelo, pero el modelo había entrenado con esos mismos partidos.</dd>
-   <dt>Qué cambió</dt><dd>Ahora la página sólo muestra predicciones fuera de muestra: cada partido lo predice un modelo que nunca lo vio.</dd></dl></div>
-  <div class="hito hoy"><small>Exposición final · esta versión</small><b class="titulo">Separamos predecir de apostar, y lo comparamos con el azar</b>
-   <dl><dt>Qué nos marcaron</dt><dd>Explicar el problema desde cero, mostrar cuánto se equivoca el modelo antes de hablar de plata, presentar la regla de apuesta como una etapa aparte,
-   comparar con estrategias simples y mostrar sólo el test.</dd>
-   <dt>Qué concluimos</dt><dd>El modelo predice igual que la cuota (<a href="#predice">etapa 1</a>). Con la regla es la única estrategia que apuesta y no pierde en ningún período, pero su ganancia
-   todavía podría ser suerte (<a href="#apostar">etapa 2</a>).</dd></dl></div>
- </div>
 </div></section>
 
 <!-- COPA 1 · EXPLORÁ -->

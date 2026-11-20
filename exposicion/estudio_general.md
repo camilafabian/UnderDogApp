@@ -163,10 +163,11 @@ temporada buena para los underdogs (ganaron 22,1%).
 | Nunca | 0% | 0% |
 | Al azar, la misma cantidad de veces (mediana de 300 sorteos) | −7,9% | −0,7% |
 
-**Retorno acumulado en el test.** El gráfico mide cuánto deja cada $100 apostados, no la plata total, porque las estrategias apuestan
-distinta cantidad de veces (el modelo, 404; «sin la regla», 1.720). En plata total, «sin la regla» parecía arrasar (+$11.616 contra
-+$2.672) sólo porque apostaba cuatro veces más; por cada $100 quedan casi iguales (+6,8% y +6,6%). Al final de la temporada: modelo +6,6%,
-apostar a todos −0,9%, rango de cuota −5,3%, «once mejor» +8,7%.
+**La plata en el test.** Todas las estrategias ponen en juego la misma plata que el modelo ($40.400: $100 en cada una de sus 404
+apuestas) y la reparten entre sus apuestas. Si cada una apostara $100 por partido, ganaría la que más veces apuesta: «sin la regla»
+(1.720 apuestas) parecía arrasar con +$11.616, aunque por cada $100 deja casi lo mismo que el modelo (+6,8% contra +6,6%). Con la misma
+plata en juego, al final de la temporada: modelo +$2.672, «sin la regla» +$2.728, «once mejor» +$3.499, apostar a todos −$379,
+rango de cuota −$2.158.
 
 **La lectura honesta.**
 
@@ -199,8 +200,7 @@ Lo que no cambió desde la Entrega 2: la cuota ya sabe casi todo.
 | 1 · Los datos | Cuánto gana el underdog según qué tan favorito es el favorito |
 | 2 · Lo que encontramos | El rating del once contra lo que esperaba la cuota |
 | 3 · ¿El modelo predice? | Métricas, calibración, matriz de confusión (la curva ROC en «Cómo lo sabemos») |
-| 4 · ¿Sirve para apostar? | La regla, con y sin la regla, estrategias simples y azar en el test |
-| El recorrido | La línea de tiempo de las entregas |
+| 4 · ¿Sirve para apostar? | La regla con un ejemplo y la plata de cada estrategia en el test, contra el azar (con y sin la regla, en «Cómo lo sabemos») |
 | 5 · Explorá | Los 2.399 partidos del test: filtro por liga, recuadro y las estrategias recalculadas |
 | 6 · Probá el modelo | Cargar un partido (real o inventado) y ver la probabilidad y si conviene apostar |
 
@@ -246,7 +246,7 @@ la rehace sólo con lo que está en `docs/data/`, sin el Silver. GitHub Pages pu
 - **¿Por qué ese rango de cuota y ese umbral?** Se eligieron sólo con la validación, entre opciones fijadas antes, igual que el modelo.
 - **Si «once mejor» da más en el test, ¿por qué no lo usan?** Porque perdía en validación: elegirlo mirando el test sería hacer trampa.
 - **¿Por qué el test anda mejor que la validación?** 2015/16 fue una temporada buena para los underdogs (22,1% de victorias).
-- **¿Por qué el gráfico del test mide por cada $100 y no en plata?** Porque en plata total gana la estrategia que más veces apuesta, aunque deje menos por apuesta. Por cada $100 se comparan en la misma escala.
+- **¿Por qué en el gráfico todas apuestan la misma plata?** Porque si cada una apostara $100 por partido, ganaría la que más veces apuesta, aunque deje menos por apuesta.
 - **¿Qué es la banda gris?** Lo que da apostar al azar la misma cantidad de veces que el modelo (90% central de 300 sorteos).
 - **¿Por qué mostrar sólo el test?** Es lo único que el modelo final nunca vio. La validación está en los «Cómo lo sabemos».
 

@@ -11,7 +11,7 @@
 | 3 | 3 · ¿El modelo predice? (etapa 1) | 5:00 – 7:30 |
 | 4 | 4 · ¿Sirve para apostar? La regla, con y sin | 7:30 – 10:00 |
 | 5 | 4 · ¿Sirve para apostar? Las estrategias y el azar | 10:00 – 12:30 |
-| 6 | El recorrido, Explorá, Probá el modelo y cierre | 12:30 – 15:00 |
+| 6 | Explorá, Probá el modelo y cierre | 12:30 – 15:00 |
 
 **Reglas para todos**
 
@@ -142,14 +142,9 @@ Valor esperado positivo no es ganar cada vez: es cobrar, en el largo plazo, más
 Acá está la regla para todos los partidos del test. En horizontal, lo que paga la cuota; en vertical, lo que cree el modelo. Arriba de la
 línea punteada, el modelo apuesta: 404 de 2.399 partidos. Casi todos los puntos quedan abajo, y eso es el margen de la casa.
 
-> **En pantalla:** el gráfico de barras «con y sin la regla».
+La regla funciona como una calibración posterior al modelo: no cambia qué tan bien predice, cambia cuándo apuesta.
 
-La regla funciona como una calibración posterior al modelo. Para medir cuánto aporta, probamos el mismo modelo sin la regla: apostar cada
-vez que su probabilidad supera un umbral fijo, 15%, el mejor en validación. Sin la regla, en validación pierde 5,8%, casi lo mismo que
-apostar a ciegas, que pierde 7,7%. Con la regla, gana 0,8%. En el test, una temporada buena para los underdogs, a casi todo le fue mejor.
-Por eso la diferencia se mide en la validación: cinco temporadas contra una.
-
-<p class="pase">Pase: «Ahora, ¿le gana a estrategias simples, que no necesitan ningún modelo?»</p>
+<p class="pase">Pase: «¿Y cuánta plata deja, comparado con estrategias simples?»</p>
 
 <div class="salto"></div>
 
@@ -159,43 +154,35 @@ Por eso la diferencia se mide en la validación: cinco temporadas contra una.
 
 > **En pantalla:** el subtítulo «¿Le gana a estrategias simples?».
 
-Comparamos el modelo con reglas simples. Cada una eligió sus parámetros mirando sólo la validación, igual que el modelo: apostar a todos,
-apostar cuando la cuota le da al underdog entre 10% y 20%, apostar cuando su once es mejor, no apostar nunca y apostar al azar.
+Comparamos el modelo con estrategias que no necesitan ningún modelo, cada una con su regla elegida mirando sólo la validación: el mismo
+modelo sin la regla, apostar a todos, apostar cuando la cuota le da entre 10% y 20%, apostar cuando el once del underdog es mejor y no apostar nunca.
 
-> **En pantalla:** el gráfico de retorno acumulado.
+> **En pantalla:** el gráfico de la plata.
 
-Este gráfico muestra sólo la temporada de test. Mide cuánto deja cada $100 apostados, y no la plata total, porque las estrategias apuestan
-distinta cantidad de veces. El modelo con la regla, la línea verde gruesa, termina en más 6,6%. Apostar a todos termina en menos 0,9%,
-y el rango de cuota, en menos 5,3%. La banda gris es lo que da apostar al azar la misma cantidad de veces que el modelo: una línea adentro
-de la banda no se distingue de la suerte.
+Este gráfico muestra la ganancia acumulada en la temporada de test. Para que sea justo, todas ponen en juego la misma plata que el modelo,
+$40.400, y la reparten entre sus apuestas: si no, ganaría la que más veces apuesta. El modelo con la regla, la línea verde gruesa, termina
+en más $2.672. Apostar a todos, en menos $379, y el rango de cuota, en menos $2.158. La banda gris es lo que da apostar al azar: una línea
+adentro de la banda no se distingue de la suerte.
 
 > **En pantalla:** la tabla y los tres puntos de lectura.
 
-Hay que leerlo con honestidad. Primero, el modelo le gana a apostar a todos y al rango de cuota. Segundo, «once mejor» y el modelo sin la
-regla dan algo más en el test, pero los dos perdían en validación: sin mirar el test, no los habríamos elegido. Tercero, el 6,6% todavía
-no se distingue del azar: el 5% de los sorteos supera 15,1%, y el intervalo de confianza incluye el cero. Con 404 apuestas, la suerte pesa mucho.
+La tabla muestra cada estrategia en los dos períodos. Tres lecturas. Primero, la regla es lo que evita perder: el mismo modelo sin la regla
+pierde 5,8% en validación, casi como apostar a ciegas. Segundo, en el test hay estrategias que dan algo más, como «once mejor», pero perdían
+en validación: fue una temporada buena para los underdogs. Tercero, todavía podría ser suerte: el 5% de los sorteos al azar supera el 15,1%.
 
-Lo que sí se sostiene es que, de las estrategias que apuestan, es la única que no pierde plata ni en validación ni en el test.
+Lo que sí se sostiene es que el modelo con la regla es la única estrategia que gana en los dos períodos.
 
 > **En pantalla:** el recuadro oscuro «Etapa 2, en una línea».
 
 La conclusión de la etapa 2: no le ganamos a las casas de apuestas, pero dejamos de perder contra ellas.
 
-<p class="pase">Pase: «Llegar a esta conclusión nos llevó cuatro entregas.»</p>
+<p class="pase">Pase: «Por último, la página tiene dos secciones para usar el modelo.»</p>
 
 <div class="salto"></div>
 
-## Integrante 6 · El recorrido, la app y el cierre
+## Integrante 6 · La app y el cierre
 
-<p class="meta">12:30 – 15:00 · Secciones: El recorrido, 5 · Explorá y 6 · Probá el modelo</p>
-
-> **En pantalla:** El recorrido, la línea de tiempo.
-
-En cada entrega concluimos algo distinto. En la primera pensábamos que los jugadores podían anticipar al underdog, y armamos el dataset.
-En la segunda descubrimos que la cuota ya sabía lo de los jugadores. En la tercera elegimos el modelo que mejor predecía, y nos marcaron
-que era la cuota con otro nombre: nunca tomaba una decisión. Al corregirlo, sumamos la pregunta económica. En la cuarta corregimos un número
-demasiado optimista, porque el modelo había visto esos partidos. Y para esta exposición separamos predecir de apostar, y comparamos contra
-estrategias simples y el azar. Lo que no cambió desde la segunda entrega: la cuota ya sabe casi todo.
+<p class="meta">12:30 – 15:00 · Secciones: 5 · Explorá y 6 · Probá el modelo</p>
 
 > **En pantalla:** 5 · Explorá y 6 · Probá el modelo, sin interactuar.
 
@@ -221,7 +208,7 @@ o cuotas de cierre, que son más difíciles de superar. Muchas gracias.
 | ¿Hay fuga de información? | Los goles y resultados sólo se usan para construir el objetivo y quedan fuera del dataset de modelado; el pipeline falla si aparecen. | 2 |
 | ¿Por qué el test anda mejor que la validación? | Fue una temporada buena para los underdogs: ganaron el 22,1%, contra 20% de la tasa base. | 4 |
 | ¿Por qué 5 puntos para definir al underdog? | Por debajo, Pinnacle y Bet365 eligen distinto favorito en el 54% de los partidos casi parejos. | 1 |
-| ¿Por qué el gráfico mide por cada $100 y no en plata total? | Porque las estrategias apuestan distinta cantidad de veces: en plata total gana más la que más apuesta, aunque deje menos por apuesta. | 5 |
+| ¿Por qué todas apuestan la misma plata en el gráfico? | Porque apuestan distinta cantidad de veces: si cada una apostara $100 por partido, ganaría más la que más apuesta, aunque deje menos por apuesta. | 5 |
 | ¿Entonces el modelo gana plata? | No está demostrado: es la única estrategia que no pierde en ningún período, pero el +6,6% no se distingue del azar. | 5 |
 
 ## Ensayo
